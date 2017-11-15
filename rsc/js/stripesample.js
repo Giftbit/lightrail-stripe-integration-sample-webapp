@@ -86,8 +86,7 @@ function simulate() {
     var transaction = {
         shopperId: shopperId,
         currency: currency,
-        amount: parseInt(total),
-        nsf: false
+        amount: parseInt(total)
     };
     console.log(JSON.stringify(transaction));
     $.ajax({

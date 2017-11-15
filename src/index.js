@@ -5,59 +5,33 @@ const lightrail = require("lightrail-client");
 const lightrailStripe = require('lightrail-stripe');
 const stripe = require('stripe')(process.env.STRIPE_API_KEY);
 const uuid = require("uuid");
+const views = require("./views");
 
+if (!process.env.STRIPE_API_KEY
+    || !process.env.LIGHTRAIL_API_KEY
+    || !process.env.LIGHTRAIL_CLIENT_SECRET
+    || !process.env.STRIPE_PUBLISHABLE_KEY
+    || !process.env.SHOPPER_ID) {
+    console.error("One or more environment variables necessary to run this demo is/are not set.  See README.md on setting these values.");
+}
+
+// Configure the Lightrail library.
 lightrail.configure({
     apiKey: process.env.LIGHTRAIL_API_KEY,
     sharedSecret: process.env.LIGHTRAIL_CLIENT_SECRET
 });
 
 const stripePublicKey = process.env.STRIPE_PUBLISHABLE_KEY;
+
+// Hardcoded values for the demo.
 const orderTotal = 37500;
 const orderCurrency = 'USD';
 const shopperId = process.env.SHOPPER_ID;
-const lightrailToken = lightrail.generateShopperToken({shopperId: shopperId});
 
-const indexTemplate = `
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-<!--    <link rel="stylesheet" href="css/style.css"/> -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
-          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-    <script src="http://code.jquery.com/jquery-3.2.1.js"
-            integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
-            integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
-            integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
-            crossorigin="anonymous"></script>
-    <script src="https://js.stripe.com/v3/"></script>
-    <title>Avocado Millennium</title>
-</head>
-<body>
-    <div id="payment-summary" class="container">
-        <script src="js/stripesample.js"
-            data-lightrailToken="${lightrailToken}"
-            data-stripePK="${stripePublicKey}"
-            data-title="Avocado Millennium"
-            data-logo="img/avocado.png"
-            data-total="${orderTotal}"
-            data-currency="${orderCurrency}"
-            data-shopperId="${shopperId}"
-            data-checkout-endpoint="charge"
-            data-simulate-endpoint="simulate">
-        </script>
-    </div>
-</body>
-</html>
-`;
-
+/**
+ * REST endpoint that simulates the charge and returns JSON.
+ */
 function simulate(req, res) {
-    console.log('simulating transaction body=', req.body);
     lightrail.contacts.getContactByUserSuppliedId(shopperId)
         .then(contact => {
             if (!contact) {
@@ -66,16 +40,20 @@ function simulate(req, res) {
             return lightrail.cards.getAccountCardByContactAndCurrency(contact, orderCurrency)
         })
         .then(card => {
-            const splitTenderParams = req.body;
-            splitTenderParams.userSuppliedId = uuid.v4();
-            return lightrail.cards.transactions.simulateTransaction(
+            const splitTenderParams = {
+                userSuppliedId: uuid.v4(),
+                nsf: false,
+                shopperId: req.body.shopperId,
+                currency: req.body.currency,
+                amount: req.body.amount
+            };
+            return lightrailStripe.simulateSplitTenderCharge(
                 splitTenderParams,
-                splitTenderParams.amount,
-                stripe
+                splitTenderParams.amount
             );
         })
         .then(transaction => {
-            res.send(transaction);
+            res.send(transaction.lightrailTransaction);
         })
         .catch(err => {
             console.error('Error simulating transaction', err);
@@ -83,14 +61,13 @@ function simulate(req, res) {
         });
 }
 
+/**
+ * REST endpoint that performs the charge and returns HTML.
+ */
 function charge(req, res) {
-    console.log('charging body=', req.body);
-
     const stripeSource = req.body.source;
-
     const lightrailShare = req.body['lightrail-amount'];
-    const stripeShare = orderTotal - lightrailShare;
-    if (lightrailShare < 0 || stripeShare < 0) {
+    if (lightrailShare < 0) {
         res.status(400).send('Invalid value for Lightrail\'s share of the transaction');
     }
 
@@ -103,7 +80,10 @@ function charge(req, res) {
     };
     lightrailStripe.createSplitTenderCharge(splitTenderParams, lightrailShare, stripe)
         .then(splitTenderCharge => {
-            res.send(splitTenderCharge);
+            res.send(views.getCheckoutCompleteView(
+                splitTenderCharge.lightrailTransaction ? splitTenderCharge.lightrailTransaction.value : 0,
+                splitTenderCharge.stripeCharge ? splitTenderCharge.stripeCharge.amount / 100 : 0
+            ));
         })
         .catch(err => {
             console.error('Error creating split tender transaction', err);
@@ -111,10 +91,12 @@ function charge(req, res) {
         });
 }
 
+// ExpressJS configuration and routing.
 const app = express();
 app.use(express.static('rsc'));
-app.use(bodyParser.json());
-app.get('/', (req, res) => res.send(indexTemplate));
+app.use(bodyParser.json({ type: 'application/json' }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.get('/', (req, res) => res.send(views.getCheckoutView(stripePublicKey, orderTotal, orderCurrency, shopperId)));
 app.post('/charge', charge);
 app.post('/simulate', simulate);
 app.listen(3000, () => console.log('Example app listening on port 3000!'));

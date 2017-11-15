@@ -9,5 +9,4 @@ npm-debug.log*
 *.iml
 .idea/
 
-# Build output
-dist/
+.env
