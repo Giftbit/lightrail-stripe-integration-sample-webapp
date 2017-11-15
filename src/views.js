@@ -53,7 +53,7 @@ exports.getCheckoutCompleteView = function (splitTenderCharge) {
 
     return `
     <html>
-    <table style=\\"width:100%\\">
+    <table>
         <tr>
             <td>Account credit charged</td>
             <td>$ ${lightrailTransactionValue}</td> 

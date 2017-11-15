@@ -32,26 +32,19 @@ const shopperId = process.env.SHOPPER_ID;
  * REST endpoint that simulates the charge and returns JSON.
  */
 function simulate(req, res) {
-    lightrail.contacts.getContactByUserSuppliedId(shopperId)
-        .then(contact => {
-            if (!contact) {
-                throw new Error(`contact not found with shopperId '${shopperId}'`);
-            }
-            return lightrail.cards.getAccountCardByContactAndCurrency(contact, orderCurrency)
-        })
-        .then(card => {
-            const splitTenderParams = {
-                userSuppliedId: uuid.v4(),
-                nsf: false,
-                shopperId: req.body.shopperId,
-                currency: req.body.currency,
-                amount: req.body.amount
-            };
-            return lightrailStripe.simulateSplitTenderCharge(
-                splitTenderParams,
-                splitTenderParams.amount
-            );
-        })
+    const splitTenderParams = {
+        userSuppliedId: uuid.v4(),
+        nsf: false,
+        shopperId: req.body.shopperId,
+        currency: req.body.currency,
+        amount: req.body.amount
+    };
+
+    // Try to charge the whole thing to lightrail, and we'll use the amount that would actually get
+    // charged when we do the real transaction.
+    const lightrailShare = splitTenderParams.amount;
+
+    lightrailStripe.simulateSplitTenderCharge(splitTenderParams, lightrailShare)
         .then(transaction => {
             res.send(transaction.lightrailTransaction);
         })
@@ -67,10 +60,6 @@ function simulate(req, res) {
  */
 function charge(req, res) {
     const stripeSource = req.body.source;
-    const lightrailShare = req.body['lightrail-amount'];
-    if (lightrailShare < 0) {
-        res.status(400).send('Invalid value for Lightrail\'s share of the transaction');
-    }
 
     const splitTenderParams = {
         amount: orderTotal,
@@ -79,6 +68,13 @@ function charge(req, res) {
         shopperId: shopperId,
         userSuppliedId: uuid.v4()
     };
+
+    // The amount to actually charge to Lightrail, as determined in the simulation.
+    const lightrailShare = req.body['lightrail-amount'];
+    if (lightrailShare < 0) {
+        res.status(400).send('Invalid value for Lightrail\'s share of the transaction');
+    }
+
     lightrailStripe.createSplitTenderCharge(splitTenderParams, lightrailShare, stripe)
         .then(splitTenderCharge => {
             res.send(views.getCheckoutCompleteView(splitTenderCharge));
