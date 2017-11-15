@@ -16,5 +16,14 @@
   "bugs": {
     "url": "https://github.com/Giftbit/stripe-integration-sample-node-webapp/issues"
   },
-  "homepage": "https://github.com/Giftbit/stripe-integration-sample-node-webapp#readme"
+  "homepage": "https://github.com/Giftbit/stripe-integration-sample-node-webapp#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "lightrail-client": "^1.1.0",
+    "lightrail-stripe": "0.0.1",
+    "stripe": "^5.3.0",
+    "uuid": "^3.1.0"
+  }
 }

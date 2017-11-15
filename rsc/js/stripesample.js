@@ -1,6 +1,5 @@
 
 var lightrailShareParameterName = 'lightrail-amount';
-var dryRunUrl = 'simulate.php';
 
 var currentScript = document.currentScript || (function () {
     var scripts = document.getElementsByTagName('script');
@@ -18,6 +17,7 @@ var currency = currentScript.getAttribute("data-currency").toUpperCase();
 var shopperId = currentScript.getAttribute('data-shopperId');
 
 var checkoutEndpoint = currentScript.getAttribute('data-checkout-endpoint');
+var dryRunUrl = currentScript.getAttribute('data-simulate-endpoint');
 
 
 $(document).ready(function () {
@@ -83,10 +83,12 @@ function lightrailStuff() {
 }
 
 function simulate() {
-    var transaction = {};
-    transaction.shopperId = shopperId;
-    transaction.currency = currency;
-    transaction.amount = parseInt(total);
+    var transaction = {
+        shopperId: shopperId,
+        currency: currency,
+        amount: parseInt(total),
+        nsf: false
+    };
     console.log(JSON.stringify(transaction));
     $.ajax({
         type: 'POST',
