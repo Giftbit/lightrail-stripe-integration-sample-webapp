@@ -56,6 +56,7 @@ function simulate(req, res) {
             res.send(transaction.lightrailTransaction);
         })
         .catch(err => {
+            // Demos don't do proper error handling.
             console.error('Error simulating transaction', err);
             res.status(500).send('Internal error');
         });
@@ -80,12 +81,10 @@ function charge(req, res) {
     };
     lightrailStripe.createSplitTenderCharge(splitTenderParams, lightrailShare, stripe)
         .then(splitTenderCharge => {
-            res.send(views.getCheckoutCompleteView(
-                splitTenderCharge.lightrailTransaction ? splitTenderCharge.lightrailTransaction.value : 0,
-                splitTenderCharge.stripeCharge ? splitTenderCharge.stripeCharge.amount / 100 : 0
-            ));
+            res.send(views.getCheckoutCompleteView(splitTenderCharge));
         })
         .catch(err => {
+            // Demos don't do proper error handling.
             console.error('Error creating split tender transaction', err);
             res.status(500).send('Internal error');
         });
@@ -99,4 +98,4 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/', (req, res) => res.send(views.getCheckoutView(stripePublicKey, orderTotal, orderCurrency, shopperId)));
 app.post('/charge', charge);
 app.post('/simulate', simulate);
-app.listen(3000, () => console.log('Example app listening on port 3000!'));
+app.listen(3000, () => console.log('Lightrail demo running on http://localhost:3000'));

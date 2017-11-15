@@ -47,13 +47,16 @@ exports.getCheckoutView = function (stripePublicKey, orderTotal, orderCurrency, 
     `;
 };
 
-exports.getCheckoutCompleteView = function (lightrailTransactionValue, stripeChargeValue) {
+exports.getCheckoutCompleteView = function (splitTenderCharge) {
+    const lightrailTransactionValue = splitTenderCharge.lightrailTransaction ? splitTenderCharge.lightrailTransaction.value / -100 : 0;
+    const stripeChargeValue = splitTenderCharge.stripeCharge ? splitTenderCharge.stripeCharge.amount / 100 : 0;
+
     return `
     <html>
     <table style=\\"width:100%\\">
         <tr>
             <td>Account credit charged</td>
-            <td>$ ${lightrailTransactionValue / -100}</td> 
+            <td>$ ${lightrailTransactionValue}</td> 
         </tr>
         <tr>
             <td>Credit card charged</td>
