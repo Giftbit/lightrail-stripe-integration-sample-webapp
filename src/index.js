@@ -6,7 +6,6 @@ const lightrailStripe = require('lightrail-stripe');
 const mustacheExpress = require("mustache-express");
 const stripe = require('stripe')(process.env.STRIPE_API_KEY);
 const uuid = require("uuid");
-const views = require("./views");
 
 // Check that the demo is configured.
 if (!process.env.STRIPE_API_KEY
@@ -81,7 +80,10 @@ function charge(req, res) {
 
     lightrailStripe.createSplitTenderCharge(splitTenderParams, lightrailShare, stripe)
         .then(splitTenderCharge => {
-            res.send(views.getCheckoutCompleteView(splitTenderCharge));
+            res.render('checkoutComplete.html', {
+                lightrailTransactionValue: splitTenderCharge.lightrailTransaction ? splitTenderCharge.lightrailTransaction.value / -100 : 0,
+                stripeChargeValue: splitTenderCharge.stripeCharge ? splitTenderCharge.stripeCharge.amount / 100 : 0
+            });
         })
         .catch(err => {
             // Demos don't do proper error handling.
@@ -98,7 +100,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.engine('html', mustacheExpress());
 app.set('view engine', 'html');
 app.set('views', __dirname + '/../rsc/views');
-// app.get('/', (req, res) => res.send(views.getCheckoutView(stripePublicKey, orderTotal, orderCurrency, shopperId)));
 app.get('/', (req, res) => res.render('index.html', staticParams));
 app.post('/charge', charge);
 app.post('/simulate', simulate);
