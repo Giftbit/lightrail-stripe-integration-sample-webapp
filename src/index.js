@@ -62,8 +62,6 @@ function simulate(req, res) {
  * REST endpoint that performs the charge and returns HTML.
  */
 function charge(req, res) {
-    console.log("charge req.body=", req.body);
-
     const splitTenderParams = {
         amount: staticParams.orderTotal,
         currency: staticParams.currency,
@@ -92,6 +90,111 @@ function charge(req, res) {
         });
 }
 
+/**
+ * REST endpoint that creates an account and returns a message string.
+ */
+function createAccount(req, res) {
+    console.log("createAccount body=", req.body);
+
+    const shopperId = req.body.shopperId;
+    lightrail.contacts.getContactByUserSuppliedId(shopperId)
+        .then(contact => {
+            if (!contact) {
+                return lightrail.contacts.createContact({
+                    userSuppliedId: shopperId
+                });
+            }
+            return contact;
+        })
+        .then(contact => {
+            return lightrail.cards.getAccountCardByContactAndCurrency(contact, staticParams.currency)
+                .then(account => {
+                    if (!account) {
+                        return lightrail.cards.createCard({
+                            userSuppliedId: "accountcard-" + shopperId + "-" + staticParams.currency,
+                            cardType: "ACCOUNT_CARD",
+                            contactId: contact.contactId
+                        });
+                    }
+                    return account;
+                })
+        })
+        .then(() => {
+            res.send("account created (or already exists) for shopperId" + shopperId);
+        })
+        .catch(err => {
+            console.error('Error creating account card', err);
+            res.status(500).send('Internal error');
+        });
+}
+
+/**
+ * REST endpoint that credits (funds) an account and returns a message string.
+ */
+function creditAccount(req, res) {
+    const shopperId = req.body.shopperId;
+    const value = req.body.value;
+
+    if (value <= 0) {
+        res.status(400).send("value must be > 0");
+        return;
+    }
+
+    lightrail.contacts.getContactByUserSuppliedId(shopperId)
+        .then(contact => {
+            if (contact) {
+                return lightrail.cards.getAccountCardByContactAndCurrency(contact, staticParams.currency)
+                    .then(account => {
+                        if (account) {
+                            return lightrail.cards.transactions.createTransaction(account, {
+                                value: value,
+                                currency: staticParams.currency,
+                                userSuppliedId: uuid.v4()
+                            }).then(() => null);
+                        } else {
+                            return "account does not exist";
+                        }
+                    });
+            } else {
+                return "shopperId does not exist";
+            }
+        })
+        .then(msg => {
+            if (msg) {
+                res.status(400).send(msg);
+            } else {
+                res.send("account for shopperId " + shopperId + " funded by " + value);
+            }
+        })
+        .catch(err => {
+            console.error('Error creating account card', err);
+            res.status(500).send('Internal error');
+        });
+}
+
+/**
+ * REST endpoint that checks the balance of an account and returns a message string.
+ */
+function checkAccount(req, res) {
+    const shopperId = req.body.shopperId;
+
+    lightrail.contacts.getContactByUserSuppliedId(shopperId)
+        .then(contact => {
+            if (contact) {
+                return "TODO";  // TODO: get card balance and return it.
+            } else {
+                return "shopperId does not exist";
+            }
+        })
+        .then(msg => {
+            res.send(msg);
+        })
+        .catch(err => {
+            console.error('Error creating account card', err);
+            res.status(500).send('Internal error');
+        });
+}
+
 // ExpressJS configuration and routing.
 const app = express();
 app.use(express.static('rsc/static'));
@@ -100,7 +203,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.engine('html', mustacheExpress());
 app.set('view engine', 'html');
 app.set('views', __dirname + '/../rsc/views');
-app.get('/', (req, res) => res.render('index.html', staticParams));
+app.get('/checkout', (req, res) => res.render('checkout.html', staticParams));
+app.get('/manageAccount', (req, res) => res.render('manageAccount.html', staticParams));
 app.post('/charge', charge);
 app.post('/simulate', simulate);
+app.post('/createAccount', createAccount);
+app.post('/creditAccount', creditAccount);
+app.post('/checkAccount', checkAccount);
 app.listen(3000, () => console.log('Lightrail demo running on http://localhost:3000'));
