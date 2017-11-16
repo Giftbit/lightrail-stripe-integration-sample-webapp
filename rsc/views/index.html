@@ -1,0 +1,208 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!--    <link rel="stylesheet" href="css/style.css"/> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-3.2.1.js"
+            integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+            integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+            integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+            crossorigin="anonymous"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <title>Avocado Millennium</title>
+</head>
+
+<body>
+
+<div class="row">
+    <div class="col">
+        <h2>{{title}}</h2>
+    </div>
+    <div class="col">
+        <image src='{{logo}}'/>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        Order Total
+    </div>
+    <div id="order-total" class="col">
+        $ {{orderTotalInCents}}
+    </div>
+</div>
+<div class="row">
+    <div class="col" for="lightrail-share">Account Credit</div>
+    <div class="col" id="lightrail-share"></div>
+</div>
+<div class="row">
+    <div class="col">
+        <input type="checkbox" id="use-acc-cred-checkbox" checked>
+        <small>Use Account Credit balance to pay for this transaction</small>
+        <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col" for="stripe-share">Credit Card</div>
+    <div class="col" id="stripe-share"></div>
+</div>
+<div class="container">
+    <form action="charge" method="post" id="payment-form">
+        <div class="form-row" id="card-element-container">
+            <label for="card-element"></label>
+            <div id="card-element"></div>
+            <div id="card-errors" role="alert"></div>
+        </div>
+        <input id="lightrail-amount" name="lightrail-amount" type='hidden'/>
+        <div id="lightrail-errors" role="alert"></div>
+        <button>Pay</button>
+    </form>
+</div>
+
+<script type="application/javascript">
+    var total = +"{{orderTotal}}";
+
+    function simulate() {
+        var transaction = {
+            shopperId: "{{shopperId}}",
+            currency: "{{currency}}",
+            amount: +"{{orderTotal}}"
+        };
+        console.log(JSON.stringify(transaction));
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: "simulate",
+            data: JSON.stringify(transaction),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (transactionPlan) {
+                console.log(JSON.stringify(transactionPlan));
+                $("#lightrail-errors").html("");
+                var lightrailShare = 0;
+                if (transactionPlan) {
+                    lightrailShare = 0 - transactionPlan.value;
+                }
+                updateSplitPoint(lightrailShare);
+                var stripeShare = total - lightrailShare;
+                if (stripeShare === 0) {
+                    $("#card-element-container").hide();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                $("#lightrail-errors").html(xhr.responseText);
+            }
+        });
+    }
+
+    function updateSplitPoint(lightrailShare) {
+        stripeShare = total - lightrailShare;
+        $("#lightrail-share").html("$" + (lightrailShare / 100));
+        $("#lightrail-amount").val(lightrailShare);
+        $("#stripe-share").html("$" + (stripeShare / 100));
+    }
+
+    function enableStripe() {
+        // Create a Stripe client
+        var stripe = Stripe("{{stripePublicKey}}");
+
+        // Create an instance of Elements
+        var elements = stripe.elements();
+
+        // Custom styling can be passed to options when creating an Element.
+        // (Note that this demo uses a wider set of styles than the guide below.)
+        var style = {
+            base: {
+                color: '#32325d',
+                lineHeight: '24px',
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': {
+                    color: '#aab7c4'
+                }
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a'
+            }
+        };
+
+        // Create an instance of the card Element
+        var card = elements.create('card', {style: style});
+
+        // Add an instance of the card Element into the `card-element` <div>
+        card.mount('#card-element');
+
+        // Handle real-time validation errors from the card Element.
+        card.addEventListener('change', function (event) {
+            var displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Handle form submission
+        var form = document.getElementById('payment-form');
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            if (total - parseInt($("#lightrail-amount").val()) > 0) {
+                stripe.createToken(card).then(function (result) {
+                    if (result.error) {
+                        // Inform the user if there was an error
+                        var errorElement = document.getElementById('card-errors');
+                        errorElement.textContent = result.error.message;
+                    } else {
+                        // Send the token to your server
+                        stripeTokenHandler(result.token);
+                    }
+                });
+            } else {
+                $("#payment-form").submit();
+            }
+        });
+    }
+
+    function stripeTokenHandler(token) {
+        // Insert the token ID into the form so it gets submitted to the server
+        var form = document.getElementById('payment-form');
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'source');
+        hiddenInput.setAttribute('value', token.id);
+        form.appendChild(hiddenInput);
+
+        // Submit the form
+        form.submit();
+    }
+
+    $('#use-acc-cred-checkbox').change(function () {
+        if (this.checked) {
+            simulate();
+        } else {
+            updateSplitPoint(0);
+        }
+        $('#textbox1').val(this.checked);
+    });
+
+    $(document).ready(function () {
+        simulate();
+        enableStripe();
+    });
+</script>
+
+</body>
+</html>

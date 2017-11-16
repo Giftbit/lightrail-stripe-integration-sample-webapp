@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const lightrail = require("lightrail-client");
 const lightrailStripe = require('lightrail-stripe');
+const mustacheExpress = require("mustache-express");
 const stripe = require('stripe')(process.env.STRIPE_API_KEY);
 const uuid = require("uuid");
 const views = require("./views");
@@ -20,12 +21,16 @@ lightrail.configure({
     apiKey: process.env.LIGHTRAIL_API_KEY,
 });
 
-const stripePublicKey = process.env.STRIPE_PUBLISHABLE_KEY;
-
-// Hardcoded values for the demo.
-const orderTotal = 37500;
-const orderCurrency = 'USD';
-const shopperId = process.env.SHOPPER_ID;
+// Configuration for the demo.
+const staticParams = {
+    title: "Avocado Millennium",
+    logo: "img/avocado.png",
+    orderTotal: 37500,
+    orderTotalInCents: () => this.orderTotal / 100,
+    currency: "USD",
+    stripePublicKey: process.env.STRIPE_PUBLISHABLE_KEY,
+    shopperId: process.env.SHOPPER_ID
+};
 
 /**
  * REST endpoint that simulates the charge and returns JSON.
@@ -58,13 +63,13 @@ function simulate(req, res) {
  * REST endpoint that performs the charge and returns HTML.
  */
 function charge(req, res) {
-    const stripeSource = req.body.source;
+    console.log("charge req.body=", req.body);
 
     const splitTenderParams = {
-        amount: orderTotal,
-        currency: orderCurrency,
-        source: stripeSource,
-        shopperId: shopperId,
+        amount: staticParams.orderTotal,
+        currency: staticParams.currency,
+        source: req.body.source,
+        shopperId: staticParams.shopperId,
         userSuppliedId: uuid.v4()
     };
 
@@ -87,10 +92,14 @@ function charge(req, res) {
 
 // ExpressJS configuration and routing.
 const app = express();
-app.use(express.static('rsc'));
+app.use(express.static('rsc/static'));
 app.use(bodyParser.json({ type: 'application/json' }));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.get('/', (req, res) => res.send(views.getCheckoutView(stripePublicKey, orderTotal, orderCurrency, shopperId)));
+app.engine('html', mustacheExpress());
+app.set('view engine', 'html');
+app.set('views', __dirname + '/../rsc/views');
+// app.get('/', (req, res) => res.send(views.getCheckoutView(stripePublicKey, orderTotal, orderCurrency, shopperId)));
+app.get('/', (req, res) => res.render('index.html', staticParams));
 app.post('/charge', charge);
 app.post('/simulate', simulate);
 app.listen(3000, () => console.log('Lightrail demo running on http://localhost:3000'));
