@@ -32,15 +32,6 @@
     <div id="credit-account-message"></div>
 </form>
 
-<h2>Check account balance</h2>
-<form action="javascript:void(0);" method="post" id="check-account-form">
-    <label for="check-account-shopperId">shopperId</label>
-    <input id="check-account-shopperId" name="shopperId" type='text'/>
-    <br>
-    <button>Check</button>
-    <div id="check-account-message"></div>
-</form>
-
 <script type="application/javascript">
     var createAccountForm = document.getElementById('create-account-form');
     createAccountForm.addEventListener("submit", function (event) {
@@ -93,33 +84,6 @@
                 console.log(status);
                 console.log(error);
                 $("#credit-account-message").html(xhr.responseText);
-            }
-        });
-    });
-
-    var checkAccountForm = document.getElementById('check-account-form');
-    checkAccountForm.addEventListener("submit", function (event) {
-        var checkAccountParams = {
-            shopperId: document.getElementById('check-account-shopperId').value
-        };
-        $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            url: "checkAccount",
-            data: JSON.stringify(checkAccountParams),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            success: function (resp) {
-                console.log(JSON.stringify(resp));
-                $("#check-account-message").html(xhr.responseText);
-            },
-            error: function (xhr, status, error) {
-                console.log(xhr.responseText);
-                console.log(status);
-                console.log(error);
-                $("#check-account-message").html(xhr.responseText);
             }
         });
     });
