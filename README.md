@@ -4,10 +4,10 @@
 
 This demo needs details about your personal Lightrail test account to run.  Copy `~.env` to `.env` and set the environment variables as follows...
 
-- `LIGHTRAIL_API_KEY` and `LIGHTRAIL_CLIENT_SECRET`: Lightrail API Key and Client Secret; you can generate and paste these values from your Lightrail account via Lightrail Web App. For the purpose of the demo use test credentials.
+- `LIGHTRAIL_API_KEY`: Lightrail API Key that you can generate and paste from your Lightrail account via Lightrail Web App. For this demo use test credentials.
 - `STRIPE_API_KEY` and `STRIPE_PUBLISHABLE_KEY`: Stripe API Key and Publishable Key; you can find this information in your Stripe account. For the purpose of the demo use test credentials.
 
-The above parameters need to be set for this demo as well as any production application. For setting up this particular demo, you also need to set up the following parameter based on a demo Contact in your test Lightrail environment. This Contact must have a `USD` Account Card with some available balance on it. 
+The above parameters need to be set for this demo as well as any production application. For setting up this particular demo, you also need to set up the following parameter based on a demo Contact in your test Lightrail environment. This Contact must have a `USD` Account Card with some available balance on it.
 
 If you have just created your Lightrail account, you can leave this parameter to it its default value `alice`; there is already a Contact by this `shopperId` in your default test data with $50 value in her USD Account Card.    
 
@@ -39,7 +39,6 @@ Here is all what you need at the front-end to set up your checkout:
             data-currency="..."
             data-shopperId="..."
             data-stripePK="..."
-            data-lightrailToken="..."
             data-checkout-endpoint="..."
             data-simulate-endpoint="...">
     </script>

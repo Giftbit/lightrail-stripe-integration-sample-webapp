@@ -5,8 +5,6 @@ const lightrail = require("lightrail-client");
 
 exports.getCheckoutView = function (stripePublicKey, orderTotal, orderCurrency, shopperId) {
     // This token allows the shopper to make a limited set of API calls dynamically from their browser.
-    const lightrailToken = lightrail.generateShopperToken({shopperId: shopperId});
-
     return `
     <html>
     <head>
@@ -31,7 +29,6 @@ exports.getCheckoutView = function (stripePublicKey, orderTotal, orderCurrency, 
     <body>
         <div id="payment-summary" class="container">
             <script src="js/stripesample.js"
-                data-lightrailToken="${lightrailToken}"
                 data-stripePK="${stripePublicKey}"
                 data-title="Avocado Millennium"
                 data-logo="img/avocado.png"

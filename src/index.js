@@ -7,9 +7,9 @@ const stripe = require('stripe')(process.env.STRIPE_API_KEY);
 const uuid = require("uuid");
 const views = require("./views");
 
+// Check that the demo is configured.
 if (!process.env.STRIPE_API_KEY
     || !process.env.LIGHTRAIL_API_KEY
-    || !process.env.LIGHTRAIL_CLIENT_SECRET
     || !process.env.STRIPE_PUBLISHABLE_KEY
     || !process.env.SHOPPER_ID) {
     console.error("One or more environment variables necessary to run this demo is/are not set.  See README.md on setting these values.");
@@ -18,7 +18,6 @@ if (!process.env.STRIPE_API_KEY
 // Configure the Lightrail library.
 lightrail.configure({
     apiKey: process.env.LIGHTRAIL_API_KEY,
-    sharedSecret: process.env.LIGHTRAIL_CLIENT_SECRET
 });
 
 const stripePublicKey = process.env.STRIPE_PUBLISHABLE_KEY;

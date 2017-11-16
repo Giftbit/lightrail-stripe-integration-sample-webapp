@@ -1,4 +1,3 @@
-
 var lightrailShareParameterName = 'lightrail-amount';
 
 var currentScript = document.currentScript || (function () {
@@ -8,7 +7,6 @@ var currentScript = document.currentScript || (function () {
 
 
 var containerDiv = currentScript.parentNode;
-var lightrailToken = currentScript.getAttribute('data-lightrailToken');
 var stripePK = currentScript.getAttribute('data-stripePK');
 var title = currentScript.getAttribute('data-title');
 var logo = currentScript.getAttribute('data-logo');
@@ -17,7 +15,7 @@ var currency = currentScript.getAttribute("data-currency").toUpperCase();
 var shopperId = currentScript.getAttribute('data-shopperId');
 
 var checkoutEndpoint = currentScript.getAttribute('data-checkout-endpoint');
-var dryRunUrl = currentScript.getAttribute('data-simulate-endpoint');
+var simulateEndpoint = currentScript.getAttribute('data-simulate-endpoint');
 
 
 $(document).ready(function () {
@@ -28,7 +26,6 @@ $(document).ready(function () {
 
 
 function lightrailStuff() {
-
     var staticContent =
         "<div class=\"row\">\n" +
         "        <div class=\"col\">\n" +
@@ -57,7 +54,7 @@ function lightrailStuff() {
         "        <div class=\"col\" id=\"stripe-share\"></div>\n" +
         "</div>" +
         "<div class=\"container\">\n" +
-        "    <form action=\""+checkoutEndpoint+"\" method=\"post\" id=\"payment-form\" >\n" +
+        "    <form action=\"" + checkoutEndpoint + "\" method=\"post\" id=\"payment-form\" >\n" +
         "        <div class=\"form-row\" id=\"card-element-container\">\n" +
         "            <label for=\"card-element\"></label>\n" +
         "            <div id=\"card-element\">\n" +
@@ -92,12 +89,11 @@ function simulate() {
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: dryRunUrl,
+        url: simulateEndpoint,
         data: JSON.stringify(transaction),
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + lightrailToken
+            'Content-Type': 'application/json'
         },
         success: function (transactionPlan) {
             console.log(JSON.stringify(transactionPlan));
@@ -132,11 +128,11 @@ function stripeStuff() {
     // Create a Stripe client
     var stripe = Stripe(stripePK);
 
-// Create an instance of Elements
+    // Create an instance of Elements
     var elements = stripe.elements();
 
-// Custom styling can be passed to options when creating an Element.
-// (Note that this demo uses a wider set of styles than the guide below.)
+    // Custom styling can be passed to options when creating an Element.
+    // (Note that this demo uses a wider set of styles than the guide below.)
     var style = {
         base: {
             color: '#32325d',
@@ -154,13 +150,13 @@ function stripeStuff() {
         }
     };
 
-// Create an instance of the card Element
+    // Create an instance of the card Element
     var card = elements.create('card', {style: style});
 
-// Add an instance of the card Element into the `card-element` <div>
+    // Add an instance of the card Element into the `card-element` <div>
     card.mount('#card-element');
 
-// Handle real-time validation errors from the card Element.
+    // Handle real-time validation errors from the card Element.
     card.addEventListener('change', function (event) {
         var displayError = document.getElementById('card-errors');
         if (event.error) {
@@ -170,7 +166,7 @@ function stripeStuff() {
         }
     });
 
-// Handle form submission
+    // Handle form submission
     var form = document.getElementById('payment-form');
     form.addEventListener("submit", function (event) {
         event.preventDefault();
