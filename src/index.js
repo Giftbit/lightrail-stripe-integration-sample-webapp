@@ -18,7 +18,7 @@ if (!process.env.STRIPE_API_KEY
 
 // Configure the Lightrail library.
 lightrail.configure({
-    apiKey: process.env.LIGHTRAIL_API_KEY,
+    apiKey: process.env.LIGHTRAIL_API_KEY
 });
 
 // Configuration for the demo.
@@ -46,7 +46,7 @@ function simulate(req, res) {
         amount: req.body.amount
     };
 
-    // Try to charge the whole thing to lightrail, and we"ll use the amount that would actually get
+    // Try to charge the whole thing to lightrail, and we'll use the amount that would actually get
     // charged when we do the real transaction.
     const lightrailShare = splitTenderParams.amount;
 
@@ -102,28 +102,14 @@ function createAccount(req, res) {
     console.log("createAccount body=", req.body);
 
     const shopperId = req.body.shopperId;
-    lightrail.contacts.getContactByUserSuppliedId(shopperId)
-        .then(contact => {
-            if (!contact) {
-                return lightrail.contacts.createContact({
-                    userSuppliedId: shopperId
-                });
-            }
-            return contact;
-        })
-        .then(contact => {
-            return lightrail.cards.getAccountCardByContactAndCurrency(contact, staticParams.currency)
-                .then(account => {
-                    if (!account) {
-                        return lightrail.cards.createCard({
-                            userSuppliedId: `accountcard-${shopperId}-${staticParams.currency}`,
-                            currency: staticParams.currency,
-                            cardType: "ACCOUNT_CARD",
-                            contactId: contact.contactId
-                        });
-                    }
-                    return account;
-                })
+    lightrail.accounts.createAccount(
+        {
+            shopperId: shopperId
+        },
+        {
+            userSuppliedId: `accountcard-${shopperId}-${staticParams.currency}`,
+            currency: staticParams.currency,
+            cardType: "ACCOUNT_CARD"
         })
         .then(() => {
             res.send(`account created (or already exists) for shopperId ${shopperId}`);
@@ -148,31 +134,17 @@ function creditAccount(req, res) {
         return;
     }
 
-    lightrail.contacts.getContactByUserSuppliedId(shopperId)
-        .then(contact => {
-            if (contact) {
-                return lightrail.cards.getAccountCardByContactAndCurrency(contact, staticParams.currency)
-                    .then(account => {
-                        if (account) {
-                            return lightrail.cards.transactions.createTransaction(account, {
-                                value: value,
-                                currency: staticParams.currency,
-                                userSuppliedId: uuid.v4()
-                            }).then(() => null);
-                        } else {
-                            return "account does not exist";
-                        }
-                    });
-            } else {
-                return "shopperId does not exist";
-            }
+    lightrail.accounts.createTransaction(
+        {
+            shopperId: shopperId
+        },
+        {
+            value: value,
+            currency: staticParams.currency,
+            userSuppliedId: uuid.v4()
         })
-        .then(msg => {
-            if (msg) {
-                res.status(400).send(msg);
-            } else {
-                res.send(`account for shopperId ${shopperId} funded by ${value}`);
-            }
+        .then(() => {
+            res.send(`account for shopperId ${shopperId} funded by ${value}`);
         })
         .catch(err => {
             console.error("Error creating account card", err);
