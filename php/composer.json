@@ -1,0 +1,26 @@
+{
+  "name": "lightrail/lightrail-stripe-sample",
+  "description": "Lightrail-Stripe Integration PHP Example",
+  "keywords": [
+    "lightrail",
+    "stripe",
+    "payment processing",
+    "gift card",
+    "account credits"
+  ],
+  "authors": [
+    {
+      "name": "Lightrail Integration Team",
+      "email": "mohammad.j@lightrail.com"
+    }
+  ],
+  "homepage": "https://lightrail.com/",
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=5.5",
+    "lightrail/lightrail-stripe": "dev-master",
+    "vlucas/phpdotenv": "^2.5@dev",
+    "mustache/mustache": "dev-master"
+  }
+}
