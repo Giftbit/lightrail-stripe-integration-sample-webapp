@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="http://code.jquery.com/jquery-3.2.1.js"
+            integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+            crossorigin="anonymous"></script>
+    <title>{{title}} Account Management</title>
+</head>
+<body>
+
+<h2>Create account</h2>
+<form action="javascript:void(0);" method="post" id="create-account-form">
+    <label for="create-account-shopperId">shopperId</label>
+    <input id="create-account-shopperId" name="shopperId" type="text" value="{{shopperId}}"/>
+    <br>
+    <button>Create</button>
+    <div id="create-account-message"></div>
+</form>
+
+<h2>Credit account</h2>
+<form action="javascript:void(0);" method="post" id="credit-account-form">
+    <label for="credit-account-shopperId">shopperId</label>
+    <input id="credit-account-shopperId" name="shopperId" type="text" value="{{shopperId}}"/>
+    <br>
+    <label for="credit-account-value">amount $</label>
+    <input id="credit-account-value" name="value" type="text"/>
+    <br>
+    <button>Credit</button>
+    <div id="credit-account-message"></div>
+</form>
+
+<script type="application/javascript">
+    var createAccountForm = document.getElementById("create-account-form");
+    createAccountForm.addEventListener("submit", function (event) {
+        var createAccountParams = {
+            shopperId: document.getElementById("create-account-shopperId").value
+        };
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "createAccount",
+            data: JSON.stringify(createAccountParams),
+            headers: {
+                "Accept": "text/plain",
+                "Content-Type": "application/json"
+            },
+            success: function (resp) {
+                console.log(JSON.stringify(resp));
+                $("#create-account-message").html(xhr.responseText);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                $("#create-account-message").html(xhr.responseText);
+            }
+        });
+    });
+
+    var creditAccountForm = document.getElementById("credit-account-form");
+    creditAccountForm.addEventListener("submit", function (event) {
+        var creditAccountParams = {
+            shopperId: document.getElementById("credit-account-shopperId").value,
+            value: parseFloat(document.getElementById("credit-account-value").value) * 100 | 0
+        };
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "creditAccount",
+            data: JSON.stringify(creditAccountParams),
+            headers: {
+                "Accept": "text/plain",
+                "Content-Type": "application/json"
+            },
+            success: function (resp) {
+                console.log(JSON.stringify(resp));
+                $("#credit-account-message").html(xhr.responseText);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                $("#credit-account-message").html(xhr.responseText);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
