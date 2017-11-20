@@ -1,13 +1,14 @@
-require("dotenv").config();
 const bodyParser = require("body-parser");
 const express = require("express");
 const lightrail = require("lightrail-client");
 const lightrailStripe = require("lightrail-stripe");
 const mustacheExpress = require("mustache-express");
+const path = require("path");
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const uuid = require("uuid");
 
-// Check that the demo is configured.
+// Load and check config.
+require("dotenv").config({path: path.join(__dirname, "..", "..", ".env")});
 if (!process.env.STRIPE_API_KEY
     || !process.env.LIGHTRAIL_API_KEY
     || !process.env.STRIPE_PUBLISHABLE_KEY
@@ -154,16 +155,16 @@ function creditAccount(req, res) {
 
 // ExpressJS configuration and routing.
 const app = express();
-app.use(express.static("rsc/static"));
+app.use(express.static(path.join(__dirname, "..", "..", "shared", "static")));
 app.use(bodyParser.json({ type: "application/json" }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.engine("html", mustacheExpress());
 app.set("view engine", "html");
-app.set("views", __dirname + "/../rsc/views");
+app.set("views", path.join(__dirname, "..", "..", "shared", "views"));
 app.get("/checkout", (req, res) => res.render("checkout.html", staticParams));
 app.get("/manageAccount", (req, res) => res.render("manageAccount.html", staticParams));
-app.post("/charge", charge);
-app.post("/simulate", simulate);
-app.post("/createAccount", createAccount);
-app.post("/creditAccount", creditAccount);
-app.listen(3000, () => console.log("Lightrail demo running on http://localhost:3000"));
+app.post("/rest/charge", charge);
+app.post("/rest/simulate", simulate);
+app.post("/rest/createAccount", createAccount);
+app.post("/rest/creditAccount", creditAccount);
+app.listen((+process.env.HTTP_PORT) || 3000, () => console.log("Lightrail demo running on http://localhost:3000"));

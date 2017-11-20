@@ -53,7 +53,7 @@
     <div class="col" id="stripe-share"></div>
 </div>
 <div class="container">
-    <form action="charge" method="post" id="payment-form">
+    <form action="rest/charge" method="post" id="payment-form">
         <div class="form-row" id="card-element-container">
             <label for="card-element"></label>
             <div id="card-element"></div>
@@ -78,7 +78,7 @@
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: "simulate",
+            url: "rest/simulate",
             data: JSON.stringify(transaction),
             headers: {
                 "Accept": "application/json",

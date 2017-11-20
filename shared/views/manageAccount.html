@@ -41,7 +41,7 @@
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: "createAccount",
+            url: "rest/createAccount",
             data: JSON.stringify(createAccountParams),
             headers: {
                 "Accept": "text/plain",
@@ -69,7 +69,7 @@
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: "creditAccount",
+            url: "rest/creditAccount",
             data: JSON.stringify(creditAccountParams),
             headers: {
                 "Accept": "text/plain",
