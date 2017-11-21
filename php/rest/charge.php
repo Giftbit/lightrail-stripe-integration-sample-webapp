@@ -4,14 +4,10 @@ require_once __DIR__ . "/../include/common.php";
 \Lightrail\Lightrail::setApiKey(getenv("LIGHTRAIL_API_KEY"));
 \Stripe\Stripe::setApiKey(getenv("STRIPE_API_KEY"));
 
-//read these parameters from the session or your order or cart object.
 $orderTotal    = $staticParams["orderTotal"];
 $orderCurrency = $staticParams["currency"];
 $orderId       = uniqid();
 $shopperId     = $staticParams["shopperId"];
-////
-
-
 $token          = $_POST['source'];
 $lightrailShare = intval($_POST['lightrail-amount']);
 
@@ -22,7 +18,7 @@ if ( $lightrailShare < 0 ) {
 	exit;
 }
 
-if (!isset($token)) {
+if ( !isset($token) ) {
 	echo '<html>
 			Stripe token not found.         
         </html>';
