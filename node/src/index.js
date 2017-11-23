@@ -169,4 +169,4 @@ app.post("/rest/charge", charge);
 app.post("/rest/simulate", simulate);
 app.post("/rest/createAccount", createAccount);
 app.post("/rest/creditAccount", creditAccount);
-app.listen((+process.env.HTTP_PORT) || 3000, () => console.log("Lightrail demo running on http://localhost:3000"));
+app.listen(3000, () => console.log("Lightrail demo running on http://localhost:3000"));

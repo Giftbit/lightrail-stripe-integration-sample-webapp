@@ -10,7 +10,7 @@ See the [base document](../README.md) on configuring.
 
 ## Running
 
-- You need [PHP](http://www.php.net/) >= 5.5, [Composer](https://getcomposer.org/) and [Docker](https://www.docker.com/).
+- You [Composer](https://getcomposer.org/) and [Docker](https://www.docker.com/).
 - Install all PHP dependencies with the command: `composer update`.
-- Start the application in Docker with the command `./run.sh`.
+- Start the application in Docker with the command `docker-compose up`.
 - Open http://localhost:3000 in your web browser.
