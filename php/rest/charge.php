@@ -4,41 +4,41 @@ require_once __DIR__ . "/../include/common.php";
 \Lightrail\Lightrail::setApiKey(getenv("LIGHTRAIL_API_KEY"));
 \Stripe\Stripe::setApiKey(getenv("STRIPE_API_KEY"));
 
-$orderTotal    = $staticParams["orderTotal"];
+$orderTotal = $staticParams["orderTotal"];
 $orderCurrency = $staticParams["currency"];
-$orderId       = uniqid();
-$shopperId     = $staticParams["shopperId"];
-$token          = $_POST['source'];
+$orderId = uniqid();
+$shopperId = $staticParams["shopperId"];
+$token = $_POST['source'];
 $lightrailShare = intval($_POST['lightrail-amount']);
 
-if ( $lightrailShare < 0 ) {
-	echo '<html>
+if ($lightrailShare < 0) {
+    echo '<html>
 			Invalid value for Lightrail\'s share of the transaction.         
         </html>';
-	exit;
+    exit;
 }
 
-if ( !isset($token) ) {
-	echo '<html>
+if (!isset($token)) {
+    echo '<html>
 			Stripe token not found.         
         </html>';
-	exit;
+    exit;
 }
 
 $stripeShare = $orderTotal - $lightrailShare;
 
 $param = array(
-	'amount'          => $orderTotal,
-	'currency'        => $orderCurrency,
-	'source'          => $token,
-	'shopperId'       => $shopperId,
-	'idempotency-key' => $orderId
+    'amount' => $orderTotal,
+    'currency' => $orderCurrency,
+    'source' => $token,
+    'shopperId' => $shopperId,
+    'idempotency-key' => $orderId
 );
 
 $splitTenderCharge = \Lightrail\StripeLightrailSplitTenderCharge::create(
-	$param,
-	$stripeShare,
-	$lightrailShare);
+    $param,
+    $stripeShare,
+    $lightrailShare);
 
 $template = $mustache->loadTemplate("checkoutComplete");
 echo $template->render(array(
