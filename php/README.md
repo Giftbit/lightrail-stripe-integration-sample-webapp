@@ -10,7 +10,7 @@ See the [base document](../README.md) on configuring.
 
 ## Running
 
-- You [Composer](https://getcomposer.org/) and [Docker](https://www.docker.com/).
+- You need [Composer](https://getcomposer.org/) to fetch dependencies and [Docker](https://www.docker.com/) to run the LAMP container.
 - Install all PHP dependencies with the command: `composer update`.
 - Start the application in Docker with the command `docker-compose up`.
 - Open http://localhost:3000 in your web browser.
