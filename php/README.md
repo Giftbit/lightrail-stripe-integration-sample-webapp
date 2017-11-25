@@ -1,6 +1,6 @@
 # Lightrail Stripe Sample PHP Web App
 
-This project demonstrates how to use Lightrail and Stripe to create an account, add credit to an account, and use the account credit on Stripe checkout.  It uses the [PHP Lightrail-Stripe Integration Library](https://github.com/Giftbit/lightrail-stripe-php).
+This project demonstrates how to use Lightrail and Stripe to create an account, add credit to an account, and use the account credit on Stripe checkout.  It uses the [PHP Lightrail client](https://github.com/Giftbit/lightrail-client-php) and the [PHP Lightrail-Stripe Integration Library](https://github.com/Giftbit/lightrail-stripe-php).
 
 The concepts used by this demo are covered in the use-case document [https://github.com/Giftbit/Lightrail-API-Docs/blob/master/use-cases/account-credits.md](https://github.com/Giftbit/Lightrail-API-Docs/blob/master/use-cases/account-credits.md).  It's worth scanning that document before continuing.
 
