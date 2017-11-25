@@ -1,0 +1,12 @@
+version: '3'
+services:
+  php:
+    image: "php:5.5-apache"
+    container_name: stripe-integration-sample-php-webapp
+    entrypoint: "/bin/bash -c 'a2enmod rewrite; echo \"Lightrail demo starting on http://localhost:3000\"; apache2-foreground'"
+    ports:
+      - "3000:80"
+    volumes:
+      - "${PWD}:/var/www/html"
+      - "${PWD}/../shared:/var/www/shared"
+      - "${PWD}/apache2/sites-available:/etc/apache2/sites-available"

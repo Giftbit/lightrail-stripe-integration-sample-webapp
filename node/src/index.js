@@ -8,10 +8,12 @@ const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const uuid = require("uuid");
 
 // Load and check config.
-require("dotenv").config({path: path.join(__dirname, "..", "..", ".env")});
+require("dotenv").config({path: path.join(__dirname, "..", "..", "shared", ".env")});
 if (!process.env.STRIPE_API_KEY
     || !process.env.LIGHTRAIL_API_KEY
     || !process.env.STRIPE_PUBLISHABLE_KEY
+    || !process.env.TITLE
+    || !process.env.LOGO
     || !process.env.SHOPPER_ID
     || !process.env.ORDER_TOTAL) {
     console.error("One or more environment variables necessary to run this demo is/are not set.  See README.md on setting these values.");
@@ -24,8 +26,8 @@ lightrail.configure({
 
 // Configuration for the demo.
 const staticParams = {
-    title: "Avocado Millennium",
-    logo: "img/avocado.png",
+    title: process.env.TITLE,
+    logo: process.env.LOGO,
     orderTotal: parseInt(process.env.ORDER_TOTAL),
     orderTotalDisplay: parseInt(process.env.ORDER_TOTAL) / 100,
     currency: "USD",
@@ -167,4 +169,4 @@ app.post("/rest/charge", charge);
 app.post("/rest/simulate", simulate);
 app.post("/rest/createAccount", createAccount);
 app.post("/rest/creditAccount", creditAccount);
-app.listen((+process.env.HTTP_PORT) || 3000, () => console.log("Lightrail demo running on http://localhost:3000"));
+app.listen(3000, () => console.log("Lightrail demo running on http://localhost:3000"));
