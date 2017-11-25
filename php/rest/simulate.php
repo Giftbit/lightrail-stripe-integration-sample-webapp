@@ -24,4 +24,14 @@ if (!is_array($requestBody)) {
 }
 
 \Lightrail\Lightrail::setApiKey(getenv("LIGHTRAIL_API_KEY"));
-echo \Lightrail\LightrailTransaction::simulate($requestBody)->getRawJson();
+\Stripe\Stripe::setApiKey(getenv("STRIPE_API_KEY"));
+
+$param = array(
+    'userSuppliedId' => uniqid(),
+    'nsf' => false,
+    'shopperId' => $requestBody['shopperId'],
+    'currency' => $requestBody['currency'],
+    'amount' => $requestBody['amount']
+);
+$splitTenderCharge = \LightrailStripe\SplitTenderCharge::simulate($param, $requestBody['amount']);
+echo $splitTenderCharge->lightrailTransaction->getRawJson();

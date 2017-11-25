@@ -24,6 +24,10 @@ if (!is_array($requestBody)) {
 }
 
 \Lightrail\Lightrail::setApiKey(getenv("LIGHTRAIL_API_KEY"));
-
-// TODO call Lightrail API to credit account
-echo "{}";
+$res = \Lightrail\LightrailAccount::createTransaction(array(
+    'shopperId' => $requestBody['shopperId'],
+    'value' => intval($requestBody['value']),
+    'userSuppliedId' => uniqid(),
+    'currency' => $staticParams['currency']
+));
+echo 'account for shopperId ' . $requestBody['shopperId'] . ' funded by ' . $requestBody['value'];

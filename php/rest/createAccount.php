@@ -24,6 +24,10 @@ if (!is_array($requestBody)) {
 }
 
 \Lightrail\Lightrail::setApiKey(getenv("LIGHTRAIL_API_KEY"));
-
-// TODO call Lightrail API to create account
-echo "{}";
+$res = \Lightrail\LightrailAccount::createAccountCard(array(
+    'shopperId' => $requestBody['shopperId'],
+    'userSuppliedId' => 'accountcard-' . $requestBody['shopperId'] . '-' . $staticParams['currency'],
+    'currency' => $staticParams['currency'],
+    'cardType' => 'ACCOUNT_CARD'
+));
+echo 'account created (or already exists) for shopperId ' . $requestBody['shopperId'];

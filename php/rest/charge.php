@@ -25,20 +25,15 @@ if (!isset($token)) {
     exit;
 }
 
-$stripeShare = $orderTotal - $lightrailShare;
-
 $param = array(
     'amount' => $orderTotal,
     'currency' => $orderCurrency,
     'source' => $token,
     'shopperId' => $shopperId,
-    'idempotency-key' => $orderId
+    'userSuppliedId' => $orderId  // idempotency-key?
 );
 
-$splitTenderCharge = \Lightrail\StripeLightrailSplitTenderCharge::create(
-    $param,
-    $stripeShare,
-    $lightrailShare);
+$splitTenderCharge = \LightrailStripe\SplitTenderCharge::create($param, $lightrailShare);
 
 $template = $mustache->loadTemplate("checkoutComplete");
 echo $template->render(array(

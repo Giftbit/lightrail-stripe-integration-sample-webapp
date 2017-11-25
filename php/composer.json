@@ -19,8 +19,12 @@
   "minimum-stability": "dev",
   "require": {
     "php": ">=5.5",
-    "lightrail/lightrail-stripe": "dev-master",
     "vlucas/phpdotenv": "^2.5@dev",
-    "mustache/mustache": "dev-master"
+    "mustache/mustache": "dev-master",
+    "lightrail/lightrail": "^0.2",
+    "lightrail/lightrail-stripe": "^0.2.2"
+  },
+  "scripts": {
+    "run": "docker-compose up"
   }
 }
