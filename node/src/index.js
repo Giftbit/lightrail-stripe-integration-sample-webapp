@@ -21,7 +21,10 @@ if (!process.env.STRIPE_API_KEY
 
 // Configure the Lightrail library.
 lightrail.configure({
-    apiKey: process.env.LIGHTRAIL_API_KEY
+    apiKey: process.env.LIGHTRAIL_API_KEY,
+    restRoot: "https://api.lightraildev.net/v1/",
+    logRequests: true,
+    sharedSecret: process.env.LIGHTRAIL_SHARED_SECRET
 });
 
 // Configuration for the demo.
@@ -32,8 +35,11 @@ const staticParams = {
     orderTotalDisplay: parseInt(process.env.ORDER_TOTAL) / 100,
     currency: "USD",
     stripePublicKey: process.env.STRIPE_PUBLISHABLE_KEY,
-    shopperId: process.env.SHOPPER_ID
+    shopperId: process.env.SHOPPER_ID,
+    shopperToken: lightrail.generateShopperToken({contactId: "contact-51b003c4c1194e2a82e48e2ad6e1d012"})
 };
+
+console.log(staticParams.shopperToken);
 
 /**
  * REST endpoint that simulates the charge and returns JSON.
