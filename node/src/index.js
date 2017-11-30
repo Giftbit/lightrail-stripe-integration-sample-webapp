@@ -171,6 +171,7 @@ app.set("view engine", "html");
 app.set("views", path.join(__dirname, "..", "..", "shared", "views"));
 app.get("/checkout", (req, res) => res.render("checkout.html", staticParams));
 app.get("/manageAccount", (req, res) => res.render("manageAccount.html", staticParams));
+app.get("/redeem", (req, res) => res.render("redeem.html", staticParams));
 app.post("/rest/charge", charge);
 app.post("/rest/simulate", simulate);
 app.post("/rest/createAccount", createAccount);
