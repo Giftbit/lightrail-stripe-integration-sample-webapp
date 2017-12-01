@@ -39,8 +39,6 @@ const staticParams = {
     shopperToken: lightrail.generateShopperToken({contactId: "contact-51b003c4c1194e2a82e48e2ad6e1d012"})
 };
 
-console.log(staticParams.shopperToken);
-
 /**
  * REST endpoint that simulates the charge and returns JSON.
  */
