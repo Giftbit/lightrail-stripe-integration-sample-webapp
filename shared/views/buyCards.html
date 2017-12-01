@@ -4,17 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <script src="http://code.jquery.com/jquery-3.2.1.js"
-            integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-            crossorigin="anonymous"></script>
+    <!-- TEMP -->
+    <style>
+                a{
+                    color:white;
+                    margin-right: 16px;
+                    text-decoration: none;
+                }
+                a:hover{
+                    text-decoration: underline;
+                }
+            </style>
+            <!-- TEMP -->      
     <title>{{title}} Redeem Gift Cards</title>
 </head>
 <body>
+        <div style="display:flex; flex-flow:row-reverse; align-items:center; height: 120px; background-color:lightslategrey; font-size:18px; color:white; font-family:sans-serif; margin-bottom: 32px;">
+                <a href="checkout">Checkout</a>    
+                <a href="redeem">Redeem</a>
+                <a href="buyCards">Buy Cards</a> 
+                <a href="manageAccount">Manage Account</a>
+                <a style="margin:0 auto 0 16px" href="/">Rocketship INC</a>
+        </div>
+<div>
     <div>
         <script
-            src="https://embed.lightraildev.net/dropin/cardPurchaseEmbed/index.js"
+            src="https://embed.lightraildev.net/dropin/cardPurchase.js"
             data-shoppertoken="{{shopperToken}}"
         ></script>
     </div>
+</div>
 </body>
 </html>
