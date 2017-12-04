@@ -1,37 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
- <!-- TEMP -->
- <style>
-        a{
-            color:white;
-            margin-right: 16px;
-            text-decoration: none;
-        }
-        a:hover{
-            text-decoration: underline;
-        }
-    </style>
-    <!-- TEMP -->
-    <title>{{title}} Redeem Gift Cards</title>
-</head>
-<body>
-    <div style="display:flex; flex-flow:row-reverse; align-items:center; height: 120px; background-color:lightslategrey; font-size:18px; color:white; font-family:sans-serif; margin-bottom: 32px;">
-        <a href="checkout">Checkout</a>    
-        <a href="redeem">Redeem</a>
-        <a href="buyCards">Buy Cards</a> 
-        <a href="manageAccount">Manage Account</a>
-        <a style="margin:0 auto 0 16px" href="/">Rocketship INC</a>
-    </div>
-    <div>
-        <script
-            src="https://embed.lightraildev.net/dropin/codeRedemption.js"
-            data-shoppertoken="{{shopperToken}}"
-            data-fullcode="{{code}}"
-        ></script>
-    </div>
-</body>
+        <title>{{title}} Redeem Gift Cards</title>
+
+        <link rel="stylesheet" href="/css/app.css">
+    </head>
+    <body>
+        {{> headerNav}}
+
+        <div class="container">
+            <div class="content">
+
+                <h2>Redeem Gift Code</h2>
+
+                <div class="two-column">
+                    <article>
+                        <script
+                            src="https://embed.lightraildev.net/dropin/codeRedemption.js"
+                            data-shoppertoken="{{shopperToken}}"
+                            data-fullcode="{{code}}"
+                        ></script>
+                    </article>
+                    <article>
+                        <h3 class="subheadline">Note</h3>
+                        {{> instructions}}
+                        <!--<p>Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Curabitur blandit tempus porttitor.</p>-->
+                        <!--<h3 class="subheadline">Note</h3>-->
+                        <!--<p>Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Curabitur blandit tempus porttitor.</p>-->
+                        <!--<h3 class="subheadline">Note</h3>-->
+                        <!--<p>Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Curabitur blandit tempus porttitor.</p>-->
+                    </article>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>
