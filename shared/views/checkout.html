@@ -105,13 +105,12 @@
 
         <script type="application/javascript">
             var total = +"{{orderTotal}}";
-//            var amountOwed = ({{orderTotal}} -)
 
             function simulate() {
                 var transaction = {
                     shopperId: "{{shopperId}}",
                     currency: "{{currency}}",
-                    amount: +"{{orderTotal}}"
+                    amount: total
                 };
                 console.log(JSON.stringify(transaction));
                 $.ajax({
@@ -147,11 +146,10 @@
 
             function updateSplitPoint(lightrailShare) {
                 stripeShare = total - lightrailShare;
-                $("#lightrail-share").html("$ " + (lightrailShare / 100));
+                $("#lightrail-share").html("$ " + (lightrailShare / 100).toFixed(2));
                 $("#lightrail-amount").val(lightrailShare);
-                $("#stripe-share").html("$ " + (stripeShare / 100));
-                $("#stripe-share-button").html("$ " + (stripeShare / 100));
-
+                $("#stripe-share").html("$ " + (stripeShare / 100).toFixed(2));
+                $("#stripe-share-button").html("$ " + (stripeShare / 100).toFixed(2));
             }
 
             function enableStripe() {
