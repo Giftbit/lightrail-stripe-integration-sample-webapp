@@ -9,8 +9,9 @@ const uuid = require("uuid");
 
 // Load and check config.
 require("dotenv").config({path: path.join(__dirname, "..", "..", "shared", ".env")});
-if (!process.env.STRIPE_API_KEY
-    || !process.env.LIGHTRAIL_API_KEY
+if (!process.env.LIGHTRAIL_API_KEY
+    || !process.env.LIGHTRAIL_SHARED_SECRET
+    || !process.env.STRIPE_API_KEY
     || !process.env.STRIPE_PUBLISHABLE_KEY
     || !process.env.TITLE
     || !process.env.LOGO

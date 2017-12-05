@@ -8,7 +8,7 @@ The concepts used by this demo are covered in the use-case document [https://git
 
 This demo needs details about your personal Lightrail and Stripe test accounts to run.  Inside the `shared` directory copy `.env.example` to `.env` and set the environment variables as follows...
 
-- `LIGHTRAIL_API_KEY`: Lightrail API Key that you can generate and paste from your Lightrail account via Lightrail Web App. For this demo use test credentials.
+- `LIGHTRAIL_API_KEY` and `LIGHTRAIL_SHARED_SECRET`: Lightrail API Key and shared secret that you can generate and paste from your Lightrail account via Lightrail Web App. For this demo use test credentials.
 - `STRIPE_API_KEY` and `STRIPE_PUBLISHABLE_KEY`: Stripe API Key and Publishable Key; you can find this information in your Stripe account. For this demo use test credentials.
 
 The above parameters need to be set for this demo as well as any production application. For setting up this particular demo, you can also set the following parameters:
