@@ -22,8 +22,6 @@ if (!process.env.STRIPE_API_KEY
 // Configure the Lightrail library.
 lightrail.configure({
     apiKey: process.env.LIGHTRAIL_API_KEY,
-    restRoot: "https://api.lightraildev.net/v1/",
-    logRequests: true,
     sharedSecret: process.env.LIGHTRAIL_SHARED_SECRET
 });
 
@@ -36,7 +34,7 @@ const staticParams = {
     currency: "USD",
     stripePublicKey: process.env.STRIPE_PUBLISHABLE_KEY,
     shopperId: process.env.SHOPPER_ID,
-    shopperToken: lightrail.generateShopperToken({contactId: "contact-51b003c4c1194e2a82e48e2ad6e1d012"})
+    shopperToken: lightrail.generateShopperToken({shopperId: process.env.SHOPPER_ID})
 };
 
 /**
