@@ -4,7 +4,7 @@ const lightrail = require("lightrail-client");
 const lightrailStripe = require("lightrail-stripe");
 const mustacheExpress = require("mustache-express");
 const path = require("path");
-const stripe = require("stripe")(process.env.STRIPE_API_KEY);
+const Stripe = require("stripe");
 const uuid = require("uuid");
 
 // Load and check config.
@@ -31,7 +31,7 @@ const staticParams = {
     title: process.env.TITLE,
     logo: process.env.LOGO,
     orderTotal: parseInt(process.env.ORDER_TOTAL),
-    orderTotalDisplay: parseInt(process.env.ORDER_TOTAL) / 100,
+    orderTotalDisplay: (parseInt(process.env.ORDER_TOTAL) / 100).toFixed(2),
     currency: "USD",
     stripePublicKey: process.env.STRIPE_PUBLISHABLE_KEY,
     shopperId: process.env.SHOPPER_ID,
@@ -61,7 +61,7 @@ function simulate(req, res) {
             res.send(transaction.lightrailTransaction);
         })
         .catch(err => {
-            // Demos don"t do proper error handling.
+            // Demos don't do proper error handling.
             console.error("Error simulating transaction", err);
             res.status(500).send("Internal error");
         });
@@ -87,15 +87,16 @@ function charge(req, res) {
         res.status(400).send("Invalid value for Lightrail\"s share of the transaction");
     }
 
+    const stripe = Stripe(process.env.STRIPE_API_KEY);
     lightrailStripe.createSplitTenderCharge(splitTenderParams, lightrailShare, stripe)
         .then(splitTenderCharge => {
             res.render("checkoutComplete.html", {
-                lightrailTransactionValue: splitTenderCharge.lightrailTransaction ? splitTenderCharge.lightrailTransaction.value / -100 : 0,
-                stripeChargeValue: splitTenderCharge.stripeCharge ? splitTenderCharge.stripeCharge.amount / 100 : 0
+                lightrailTransactionValue: ((splitTenderCharge.lightrailTransaction ? splitTenderCharge.lightrailTransaction.value : 0) / - 100).toFixed(2),
+                stripeChargeValue: ((splitTenderCharge.stripeCharge ? splitTenderCharge.stripeCharge.amount : 0) / 100).toFixed(2)
             });
         })
         .catch(err => {
-            // Demos don"t do proper error handling.
+            // Demos don't do proper error handling.
             console.error("Error creating split tender transaction", err);
             res.status(500).send("Internal error");
         });
