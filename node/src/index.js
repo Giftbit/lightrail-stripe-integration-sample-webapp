@@ -14,7 +14,6 @@ if (!process.env.LIGHTRAIL_API_KEY
     || !process.env.STRIPE_API_KEY
     || !process.env.STRIPE_PUBLISHABLE_KEY
     || !process.env.TITLE
-    || !process.env.LOGO
     || !process.env.SHOPPER_ID
     || !process.env.ORDER_TOTAL) {
     console.error("One or more environment variables necessary to run this demo is/are not set.  See README.md on setting these values.");
@@ -29,7 +28,6 @@ lightrail.configure({
 // Configuration for the demo.
 const staticParams = {
     title: process.env.TITLE,
-    logo: process.env.LOGO,
     orderTotal: parseInt(process.env.ORDER_TOTAL),
     orderTotalDisplay: (parseInt(process.env.ORDER_TOTAL) / 100).toFixed(2),
     currency: "USD",
