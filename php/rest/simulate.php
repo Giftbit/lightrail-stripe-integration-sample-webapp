@@ -23,7 +23,6 @@ if (!is_array($requestBody)) {
     throw new Exception('Received content contained invalid JSON!');
 }
 
-\Lightrail\Lightrail::setApiKey(getenv("LIGHTRAIL_API_KEY"));
 \Stripe\Stripe::setApiKey(getenv("STRIPE_API_KEY"));
 
 $param = array(

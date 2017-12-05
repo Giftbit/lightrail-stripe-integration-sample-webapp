@@ -1,9 +1,6 @@
 <?php
 require_once __DIR__ . "/../include/common.php";
 
-\Lightrail\Lightrail::setApiKey(getenv("LIGHTRAIL_API_KEY"));
-\Stripe\Stripe::setApiKey(getenv("STRIPE_API_KEY"));
-
 $orderTotal = $staticParams["orderTotal"];
 $orderCurrency = $staticParams["currency"];
 $orderId = uniqid();
@@ -37,6 +34,6 @@ $splitTenderCharge = \LightrailStripe\SplitTenderCharge::create($param, $lightra
 
 $template = $mustache->loadTemplate("checkoutComplete");
 echo $template->render(array(
-    "lightrailTransactionValue" => $splitTenderCharge->getLightrailShare() / 100,
-    "stripeChargeValue" => $splitTenderCharge->getStripeShare() / 100
+    "lightrailTransactionValue" => number_format($splitTenderCharge->getLightrailShare() / 100, 2),
+    "stripeChargeValue" => number_format($splitTenderCharge->getStripeShare() / 100, 2)
 ));

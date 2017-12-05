@@ -23,7 +23,6 @@ if (!is_array($requestBody)) {
     throw new Exception('Received content contained invalid JSON!');
 }
 
-\Lightrail\Lightrail::setApiKey(getenv("LIGHTRAIL_API_KEY"));
 $res = \Lightrail\LightrailAccount::createAccountCard(array(
     'shopperId' => $requestBody['shopperId'],
     'userSuppliedId' => 'accountcard-' . $requestBody['shopperId'] . '-' . $staticParams['currency'],
