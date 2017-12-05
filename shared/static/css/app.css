@@ -92,7 +92,7 @@ a:hover {
     max-width: 300px;
 }
 
-.button {
+.button > button {
     background-color: #0070FF;
     border: 0;
     border-radius: 4px;
@@ -104,17 +104,26 @@ a:hover {
     hyphens: none;
     line-height: 1.4;
     margin: 0;
-    padding: 16px 32px 16px 32px;
+    padding: 24px 32px 24px 32px;
     text-align: center;
     text-transform: uppercase;
     text-decoration: none;
     width: auto;
 }
 
-.button.dark {
+.button.dark > button:disabled, .button > button:disabled {
+    background-color: lightslategray;
+}
+
+.button > button:hover{
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.button.dark > button {
     background-color: #344049;
 }
-.button.full-width {
+.button.full-width > button {
     width: 100% !important;
 }
 
