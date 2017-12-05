@@ -1,0 +1,182 @@
+/* apply a natural box layout model to all elements, but allowing components to change */
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+h1, h2, h3, h4 {
+    font-weight: normal;
+}
+
+.headline {
+    font-size: 24px;
+}
+
+.subheader {
+    font-size: 18px;
+}
+
+h2 {
+    font-size: 24px;
+    margin: 27px 0 34px;
+}
+
+h3 {
+    font-size: 18px;
+    margin-top: 0;
+}
+
+p, .body {
+    font-size: 16px;
+    line-height: 1.4;
+    margin: 0 0 2rem;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    font-family: "Helvetica Neue", Helvetica, Arial,sans-serif;
+}
+
+a {
+    color:white;
+    margin-right: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+a:hover {
+    text-decoration: underline;
+    /*background-color: #005acc;*/
+}
+
+.logo {
+    margin:0 auto 0 42px;
+    font-size: 32px;
+    display: block;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.header {
+    display:flex;
+    flex-flow:row-reverse;
+    align-items:center;
+    height: 80px;
+    background-color:#344049;
+    font-size: 16px;
+    color: white;
+}
+
+.container {
+    padding: 0 42px 75px;
+}
+
+.container.home {
+    padding-top: 75px;
+}
+
+.demo-sections {
+    margin-top: 162px;
+}
+
+.demo-sections section {
+    display: inline-block;
+    max-width: 300px;
+}
+
+.button {
+    background-color: #0070FF;
+    border: 0;
+    border-radius: 4px;
+    color: #fff;
+    display: inline-block;
+    font-family: Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    hyphens: none;
+    line-height: 1.4;
+    margin: 0;
+    padding: 16px 32px 16px 32px;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    width: auto;
+}
+
+.button.dark {
+    background-color: #344049;
+}
+.button.full-width {
+    width: 100% !important;
+}
+
+.two-column {
+    display: flex;
+}
+
+.two-column .outlined {
+    border: 1px solid  #344049;
+    margin-right: 50px;
+    border-radius: 4px;
+    padding: 24px;
+}
+
+.two-column article {
+    flex: 1;
+    padding: 0 2rem 0 0;
+}
+
+.two-column article + article {
+    padding: 0 2rem;
+}
+
+.use-acc-cred-label {
+    font-size: 14px;
+}
+
+table.order-items h2,
+table.order-items h3 {
+    margin: 0;
+}
+
+table.order-items,
+table.order {
+    width: 100%;
+}
+
+table.order-items {
+    margin-bottom: 20px;
+}
+
+table.order-items td {
+    vertical-align: top;
+}
+
+table.order-items td:first-child {
+    width: 114px;
+}
+
+table.order tr td {
+    padding: 10px 0;
+}
+
+table.order tr.order-total td {
+    font-size: 24px;
+}
+
+
+/* STRIPE */
+#card-element {
+    border: 1px solid #CCC;
+    border-radius: 5px;
+    margin: 10px 0 36px;
+    padding: 6px;
+}

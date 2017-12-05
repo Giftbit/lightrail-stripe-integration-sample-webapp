@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Buy {{title}} Gift Cards</title>
+
+        <link rel="stylesheet" href="/css/app.css">
+
+        <style>
+            .ltrl_button {
+                background-color: #344049;
+                border: 0 solid #344049;
+                border-radius: 4px;
+                color: #fff;
+                display: inline-block;
+                font-family: Helvetica,Arial,sans-serif;
+                font-size: 16px;
+                font-weight: 700;
+                hyphens: none;
+                line-height: 1.4;
+                margin: 0;
+                padding: 16px 32px 16px 32px;
+                text-align: center;
+                text-decoration: none;
+                width: auto;
+            }
+        </style>
+    </head>
+    <body>
+        {{> headerNav}}
+
+        <div class="container">
+            <div class="content">
+                <h2>Buy Cards</h2>
+
+                <div class="two-column">
+                    <article>
+                        <div class="outlined">
+                            <p>Buy a digital gift card and send it to someone to claim in our checkout.</p>
+                            <div class="button full-width dark">
+                                <script
+                                    src="https://embed.lightrail.com/dropin/cardPurchase.js"
+                                    data-shoppertoken="{{shopperToken}}">
+                                </script>
+                            </div>
+                        </div>
+                    </article>
+                    <article>
+                        <h3 class="subheadline">Note</h3>
+                        {{> instructions}}
+                        <!--<p>Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Curabitur blandit tempus porttitor.</p>-->
+                        <!--<h3 class="subheadline">Note</h3>-->
+                        <!--<p>Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Curabitur blandit tempus porttitor.</p>-->
+                        <!--<h3 class="subheadline">Note</h3>-->
+                        <!--<p>Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Curabitur blandit tempus porttitor.</p>-->
+                    </article>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
+

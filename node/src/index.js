@@ -21,7 +21,8 @@ if (!process.env.STRIPE_API_KEY
 
 // Configure the Lightrail library.
 lightrail.configure({
-    apiKey: process.env.LIGHTRAIL_API_KEY
+    apiKey: process.env.LIGHTRAIL_API_KEY,
+    sharedSecret: process.env.LIGHTRAIL_SHARED_SECRET
 });
 
 // Configuration for the demo.
@@ -32,7 +33,8 @@ const staticParams = {
     orderTotalDisplay: parseInt(process.env.ORDER_TOTAL) / 100,
     currency: "USD",
     stripePublicKey: process.env.STRIPE_PUBLISHABLE_KEY,
-    shopperId: process.env.SHOPPER_ID
+    shopperId: process.env.SHOPPER_ID,
+    shopperToken: lightrail.generateShopperToken({shopperId: process.env.SHOPPER_ID})
 };
 
 /**
@@ -165,6 +167,8 @@ app.set("view engine", "html");
 app.set("views", path.join(__dirname, "..", "..", "shared", "views"));
 app.get("/checkout", (req, res) => res.render("checkout.html", staticParams));
 app.get("/manageAccount", (req, res) => res.render("manageAccount.html", staticParams));
+app.get("/redeem", (req, res) => res.render("redeem.html", Object.assign(staticParams, {code: req.query.code})));
+app.get("/buyCards", (req, res) => res.render("buyCards.html", staticParams));
 app.post("/rest/charge", charge);
 app.post("/rest/simulate", simulate);
 app.post("/rest/createAccount", createAccount);

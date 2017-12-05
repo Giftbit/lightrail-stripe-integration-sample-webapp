@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{{title}} Redeem Gift Cards</title>
+
+        <link rel="stylesheet" href="/css/app.css">
+    </head>
+    <body>
+        {{> headerNav}}
+
+        <div class="container">
+            <div class="content">
+
+                <h2>Redeem Gift Code</h2>
+
+                <div class="two-column">
+                    <article>
+                        <script
+                            src="https://embed.lightrail.com/dropin/codeRedemption.js"
+                            data-shoppertoken="{{shopperToken}}"
+                            data-fullcode="{{code}}"
+                        ></script>
+                    </article>
+                    <article>
+                        <h3 class="subheadline">Note</h3>
+                        {{> instructions}}
+                        <!--<p>Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Curabitur blandit tempus porttitor.</p>-->
+                        <!--<h3 class="subheadline">Note</h3>-->
+                        <!--<p>Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Curabitur blandit tempus porttitor.</p>-->
+                        <!--<h3 class="subheadline">Note</h3>-->
+                        <!--<p>Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Curabitur blandit tempus porttitor.</p>-->
+                    </article>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
