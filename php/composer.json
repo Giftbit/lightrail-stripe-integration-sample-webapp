@@ -8,12 +8,7 @@
     "gift card",
     "account credits"
   ],
-  "authors": [
-    {
-      "name": "Lightrail Integration Team",
-      "email": "mohammad.j@lightrail.com"
-    }
-  ],
+  "authors": [],
   "homepage": "https://lightrail.com/",
   "license": "MIT",
   "minimum-stability": "dev",
