@@ -49,18 +49,14 @@
 
                             <table class="order" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
+                                    <td>Total</td>
+                                    <td>$ {{orderTotalDisplay}}</td>
+                                </tr>
+                                <tr>
                                     <td>Account Balance</td>
                                     <td>
                                         <span id="lightrail-share"></span>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td>Item Total</td>
-                                    <td>$ {{orderTotalDisplay}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Amount Owed</td>
-                                    <td><span id="stripe-share"></span></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
@@ -68,10 +64,8 @@
                                     </td>
                                 </tr>
                                 <tr class="order-total">
-                                    <td>Total</td>
-                                    <td>
-                                        <span id="order-total">$ {{orderTotalDisplay}}</span>
-                                    </td>
+                                    <td>Amount Owed</td>
+                                    <td><span id="stripe-share"></span></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
