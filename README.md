@@ -22,9 +22,9 @@ Note, the redemption widget will automatically create an account if no account e
 If you want to manually create an account for a Shopper Token go to the account management page to create and fund the account.
 
 ### Step 2: Drop-in Gift Card Setup
-You'll need your Drop-in Gift Card [template](https://www.lightrail.com/app/#/cards/dropin) within your Lightrail account.
+You'll need to setup your Drop-in Gift Card [template](https://www.lightrail.com/app/#/cards/dropin) within your Lightrail account.
 For this demo use `http://localhost:3000/redeem?code={{fullcode}}` for the claim link.
-The other values can be basic placeholders and are not necessary for testing the basic flow. 
+The other values can be mock placeholders and are not necessary for testing the basic flow. 
 
 ## Running
 See README.md inside each environment's directory for instructions on running.
