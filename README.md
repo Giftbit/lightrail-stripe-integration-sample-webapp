@@ -6,19 +6,20 @@ It uses Mustache templates and language-specific libraries for Lightrail and Lig
 ## Configuring
 This demo needs details about your Stripe and Lightrail accounts to run.
 
-### Step 1: Creating the '.env'   
-Inside the `shared` directory copy `.env.example` to `.env` and set the variables as explained below.
+### Step 1: Setting Environment Config   
+Inside the `shared` directory copy the file `.env.example` to a new file called `.env`. Set the variables as explained below. 
+Be sure to use test credentials from both your Lightrail and Stripe accounts. 
 - `LIGHTRAIL_API_KEY`: Generate an API key for your Lightrail account [here](https://www.lightrail.com/app/#/account/api);  
 - `LIGHTRAIL_SHARED_SECRET`: From the same [page](https://www.lightrail.com/app/#/account/api) as where you generated an API key, scroll down to view your Shared Secret Key.
-- `STRIPE_API_KEY` and `STRIPE_PUBLISHABLE_KEY`: Stripe API Key and Publishable Key; you can find this information in your Stripe account. For this demo use test credentials.
+- `STRIPE_API_KEY` and `STRIPE_PUBLISHABLE_KEY`: Stripe API Key and Publishable Key; you can find this information in your Stripe account. 
 
-#### Optional Environment Config
-Optional `.env` parameters:
-- `TITLE`: the title of the store.
-- `SHOPPER_ID`: the shopper that will be interacting with the checkout page as well as the default shopper used for account management.
-- `ORDER_TOTAL`: the total amount the shopper will be charged at checkout.
+#### Optional Fields
+- `TITLE`: The title of the store.
+- `SHOPPER_ID`: The shopper that will be interacting with the checkout page as well as the default shopper used for account management.
+- `ORDER_TOTAL`: The total amount the shopper will be charged at checkout.
 
-If the shopper with that `shopperId` doesn't exist or doesn't have a USD account yet, go to the account management page to create and fund the account.
+Note, the redemption widget will automatically create an account if no account exists yet for a given Shopper Token.
+If you want to manually create an account for a Shopper Token go to the account management page to create and fund the account.
 
 ### Step 2: Drop-in Gift Card Setup
 You'll need your Drop-in Gift Card [template](https://www.lightrail.com/app/#/cards/dropin) within your Lightrail account.
