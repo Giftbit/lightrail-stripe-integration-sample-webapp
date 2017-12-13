@@ -36,7 +36,7 @@ const staticParams = {
     currency: "USD",
     stripePublicKey: process.env.STRIPE_PUBLISHABLE_KEY,
     shopperId: process.env.SHOPPER_ID,
-    shopperToken: lightrail.generateShopperToken({contactId: "contact-51b003c4c1194e2a82e48e2ad6e1d012"})
+    shopperToken: lightrail.generateShopperToken({shopperId: process.env.SHOPPER_ID})
 };
 
 /**
