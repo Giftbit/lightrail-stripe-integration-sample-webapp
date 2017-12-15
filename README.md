@@ -14,7 +14,6 @@ This demo needs details about your personal Lightrail and Stripe test accounts t
 The above parameters need to be set for this demo as well as any production application. For setting up this particular demo, you can also set the following parameters:
 
 - `TITLE`: the title of the store.
-- `LOGO`: the logo for the store.
 - `SHOPPER_ID`: the shopper that will be interacting with the checkout page as well as the default shopper used for account management.
 - `ORDER_TOTAL`: the total amount the shopper will be charged at checkout.
 
