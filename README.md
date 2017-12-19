@@ -1,7 +1,7 @@
 # Lightrail Stripe Sample Web App
-This project demonstrates how to use Lightrail's Drop-in Gift Card components. See our [documentation](https://github.com/Giftbit/Lightrail-API-Docs/blob/master/docs/quickstart/drop-in-gift-cards.md#drop-in-gift-cards) for a quick overview.  
+This project demonstrates how to use Lightrail's Drop-in Gift Card components. See our Drop-in Gift Card [documentation](https://github.com/Giftbit/Lightrail-API-Docs/blob/master/docs/quickstart/drop-in-gift-cards.md#drop-in-gift-cards) for a quick overview.  
 
-It uses Mustache templates and language-specific libraries for Lightrail and Lightrail-Stripe
+This demo is implemented in 2 environments: NodeJS and PHP. (Ruby and Java examples are coming soon.) Each environment uses language-specific libraries for Lightrail and Lightrail-Stripe that we strongly recommend. Common display code is rendered using Mustache templates, but any similar technology will do.
 
 ## Configuring
 This demo needs details about your Stripe and Lightrail accounts to run.

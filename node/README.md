@@ -1,3 +1,5 @@
+# Node: Lightrail Stripe Sample Web App
+
 ## Configuring
 See the [base document](../README.md) on configuring.
 
