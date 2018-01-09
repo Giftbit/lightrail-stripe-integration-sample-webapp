@@ -4,16 +4,16 @@ const lightrail = require("lightrail-client");
 const lightrailStripe = require("lightrail-stripe");
 const mustacheExpress = require("mustache-express");
 const path = require("path");
-const stripe = require("stripe")(process.env.STRIPE_API_KEY);
+const Stripe = require("stripe");
 const uuid = require("uuid");
 
 // Load and check config.
 require("dotenv").config({path: path.join(__dirname, "..", "..", "shared", ".env")});
-if (!process.env.STRIPE_API_KEY
-    || !process.env.LIGHTRAIL_API_KEY
+if (!process.env.LIGHTRAIL_API_KEY
+    || !process.env.LIGHTRAIL_SHARED_SECRET
+    || !process.env.STRIPE_API_KEY
     || !process.env.STRIPE_PUBLISHABLE_KEY
     || !process.env.TITLE
-    || !process.env.LOGO
     || !process.env.SHOPPER_ID
     || !process.env.ORDER_TOTAL) {
     console.error("One or more environment variables necessary to run this demo is/are not set.  See README.md on setting these values.");
@@ -22,17 +22,14 @@ if (!process.env.STRIPE_API_KEY
 // Configure the Lightrail library.
 lightrail.configure({
     apiKey: process.env.LIGHTRAIL_API_KEY,
-    restRoot: "https://api.lightraildev.net/v1/",
-    logRequests: true,
     sharedSecret: process.env.LIGHTRAIL_SHARED_SECRET
 });
 
 // Configuration for the demo.
 const staticParams = {
     title: process.env.TITLE,
-    logo: process.env.LOGO,
     orderTotal: parseInt(process.env.ORDER_TOTAL),
-    orderTotalDisplay: parseInt(process.env.ORDER_TOTAL) / 100,
+    orderTotalDisplay: (parseInt(process.env.ORDER_TOTAL) / 100).toFixed(2),
     currency: "USD",
     stripePublicKey: process.env.STRIPE_PUBLISHABLE_KEY,
     shopperId: process.env.SHOPPER_ID,
@@ -62,7 +59,7 @@ function simulate(req, res) {
             res.send(transaction.lightrailTransaction);
         })
         .catch(err => {
-            // Demos don"t do proper error handling.
+            // Demos don't do proper error handling.
             console.error("Error simulating transaction", err);
             res.status(500).send("Internal error");
         });
@@ -88,15 +85,16 @@ function charge(req, res) {
         res.status(400).send("Invalid value for Lightrail\"s share of the transaction");
     }
 
+    const stripe = Stripe(process.env.STRIPE_API_KEY);
     lightrailStripe.createSplitTenderCharge(splitTenderParams, lightrailShare, stripe)
         .then(splitTenderCharge => {
             res.render("checkoutComplete.html", {
-                lightrailTransactionValue: splitTenderCharge.lightrailTransaction ? splitTenderCharge.lightrailTransaction.value / -100 : 0,
-                stripeChargeValue: splitTenderCharge.stripeCharge ? splitTenderCharge.stripeCharge.amount / 100 : 0
+                lightrailTransactionValue: ((splitTenderCharge.lightrailTransaction ? splitTenderCharge.lightrailTransaction.value : 0) / - 100).toFixed(2),
+                stripeChargeValue: ((splitTenderCharge.stripeCharge ? splitTenderCharge.stripeCharge.amount : 0) / 100).toFixed(2)
             });
         })
         .catch(err => {
-            // Demos don"t do proper error handling.
+            // Demos don't do proper error handling.
             console.error("Error creating split tender transaction", err);
             res.status(500).send("Internal error");
         });

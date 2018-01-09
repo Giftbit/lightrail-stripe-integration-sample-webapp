@@ -49,18 +49,14 @@
 
                             <table class="order" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
+                                    <td>Total</td>
+                                    <td>$ {{orderTotalDisplay}}</td>
+                                </tr>
+                                <tr>
                                     <td>Account Balance</td>
                                     <td>
                                         <span id="lightrail-share"></span>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td>Item Total</td>
-                                    <td>$ {{orderTotalDisplay}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Amount Owed</td>
-                                    <td><span id="stripe-share"></span></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
@@ -68,10 +64,8 @@
                                     </td>
                                 </tr>
                                 <tr class="order-total">
-                                    <td>Total</td>
-                                    <td>
-                                        <span id="order-total">$ {{orderTotalDisplay}}</span>
-                                    </td>
+                                    <td>Amount Owed</td>
+                                    <td><span id="stripe-share"></span></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
@@ -105,13 +99,12 @@
 
         <script type="application/javascript">
             var total = +"{{orderTotal}}";
-//            var amountOwed = ({{orderTotal}} -)
 
             function simulate() {
                 var transaction = {
                     shopperId: "{{shopperId}}",
                     currency: "{{currency}}",
-                    amount: +"{{orderTotal}}"
+                    amount: total
                 };
                 console.log(JSON.stringify(transaction));
                 $.ajax({
@@ -147,11 +140,10 @@
 
             function updateSplitPoint(lightrailShare) {
                 stripeShare = total - lightrailShare;
-                $("#lightrail-share").html("$ " + (lightrailShare / 100));
+                $("#lightrail-share").html("$ " + (lightrailShare / 100).toFixed(2));
                 $("#lightrail-amount").val(lightrailShare);
-                $("#stripe-share").html("$ " + (stripeShare / 100));
-                $("#stripe-share-button").html("$ " + (stripeShare / 100));
-
+                $("#stripe-share").html("$ " + (stripeShare / 100).toFixed(2));
+                $("#stripe-share-button").html("$ " + (stripeShare / 100).toFixed(2));
             }
 
             function enableStripe() {
