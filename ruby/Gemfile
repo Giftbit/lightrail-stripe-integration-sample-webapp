@@ -4,5 +4,7 @@ source "https://rubygems.org"
 
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
+gem "dotenv"
+gem "json"
+gem "mustache"
 gem "sinatra"
-gem 'dotenv-rails', groups: [:development, :test]
