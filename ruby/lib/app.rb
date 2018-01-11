@@ -1,3 +1,4 @@
+require 'bundler/setup'
 require 'dotenv'
 require 'json'
 require 'sinatra'
@@ -51,7 +52,7 @@ post '/rest/simulate' do
 
   # Try to charge the whole thing to lightrail, and we'll use the amount that would actually get
   # charged when we do the real transaction.
-  lightrail_share = split_tender_params['amount']
+  lightrail_share = split_tender_params[:amount]
 
   split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.create(split_tender_params, lightrail_share)
 

@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/Giftbit/lightrail-client-ruby.git
-  revision: def510ba6d90ff9c3c6f66dbab3d5d0eb054ddf3
+  revision: 22f3d8805d712b041c2af51a286fb3a87dd06e00
   specs:
-    lightrail_client (0.6.1)
+    lightrail_client (0.6.2)
       faraday (~> 0.12)
       json (~> 1.7)
       jwt (~> 2.1)
@@ -10,9 +10,9 @@ GIT
 
 GIT
   remote: https://github.com/Giftbit/lightrail-stripe-ruby.git
-  revision: 6014d10940ba18abc4249224b8fa44fd4cbd6817
+  revision: c43dae3ce07ca2df3981507a7a643a496a2016f2
   specs:
-    lightrail_stripe (0.5.0)
+    lightrail_stripe (0.6.0)
       faraday (~> 0.12)
       json (~> 1.7)
       openssl (~> 2.0)
