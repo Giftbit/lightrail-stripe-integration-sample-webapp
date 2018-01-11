@@ -1,10 +1,35 @@
+GIT
+  remote: https://github.com/Giftbit/lightrail-client-ruby.git
+  revision: def510ba6d90ff9c3c6f66dbab3d5d0eb054ddf3
+  specs:
+    lightrail_client (0.6.1)
+      faraday (~> 0.12)
+      json (~> 1.7)
+      jwt (~> 2.1)
+      openssl (~> 2.0)
+
+GIT
+  remote: https://github.com/Giftbit/lightrail-stripe-ruby.git
+  revision: 6014d10940ba18abc4249224b8fa44fd4cbd6817
+  specs:
+    lightrail_stripe (0.5.0)
+      faraday (~> 0.12)
+      json (~> 1.7)
+      openssl (~> 2.0)
+      stripe (~> 3.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
     dotenv (2.2.1)
-    json (2.1.0)
+    faraday (0.13.1)
+      multipart-post (>= 1.2, < 3)
+    json (1.8.6)
+    jwt (2.1.0)
+    multipart-post (2.0.0)
     mustache (1.0.5)
     mustermann (1.0.1)
+    openssl (2.1.0)
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
@@ -13,6 +38,8 @@ GEM
       rack (~> 2.0)
       rack-protection (= 2.0.0)
       tilt (~> 2.0)
+    stripe (3.9.1)
+      faraday (~> 0.10)
     tilt (2.0.8)
 
 PLATFORMS
@@ -21,6 +48,8 @@ PLATFORMS
 DEPENDENCIES
   dotenv
   json
+  lightrail_client!
+  lightrail_stripe!
   mustache
   sinatra
 

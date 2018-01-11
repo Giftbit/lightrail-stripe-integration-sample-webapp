@@ -19,7 +19,7 @@ if (!process.env.LIGHTRAIL_API_KEY
     console.error("One or more environment variables necessary to run this demo is/are not set.  See README.md on setting these values.");
 }
 
-// Configure the Lightrail library.
+// Configure Lightrail.
 lightrail.configure({
     apiKey: process.env.LIGHTRAIL_API_KEY,
     sharedSecret: process.env.LIGHTRAIL_SHARED_SECRET

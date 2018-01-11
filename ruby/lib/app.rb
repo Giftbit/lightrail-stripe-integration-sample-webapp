@@ -1,5 +1,8 @@
 require 'dotenv'
+require 'json'
 require 'sinatra'
+require 'lightrail_client'
+require 'lightrail_stripe'
 require 'mustache'
 
 # Load and check config.
@@ -14,10 +17,9 @@ if !ENV['LIGHTRAIL_API_KEY'] ||
   puts 'One or more environment variables necessary to run this demo is/are not set.  See README.md on setting these values.'
 end
 
-# Configure Sinatra.
-set :port, 3000
-Mustache.template_path = File.join(__dir__, '..', '..', 'shared', 'views')
-Mustache.template_extension = 'html'
+# Configure Lightrail.
+Lightrail::api_key = ENV['LIGHTRAIL_API_KEY']
+Lightrail::shared_secret = ENV['LIGHTRAIL_SHARED_SECRET']
 
 # Configuration for the demo.
 static_params = {
@@ -27,8 +29,35 @@ static_params = {
     currency: 'USD',
     stripePublicKey: ENV['STRIPE_PUBLISHABLE_KEY'],
     shopperId: ENV['SHOPPER_ID'],
-    shopperToken: 'TODO'
+    shopperToken: Lightrail::ShopperTokenFactory.generate({shopper_id: ENV['SHOPPER_ID']})
 }
+
+# Configure Sinatra.
+set :port, 3000
+Mustache.template_path = File.join(__dir__, '..', '..', 'shared', 'views')
+Mustache.template_extension = 'html'
+
+post '/rest/simulate' do
+  request.body.rewind
+  request_payload = JSON.parse request.body.read
+
+  split_tender_params = {
+      userSuppliedId: SecureRandom.uuid,
+      nsf: false,
+      shopperId: request_payload['shopperId'],
+      currency: request_payload['currency'],
+      amount: request_payload['amount']
+  }
+
+  # Try to charge the whole thing to lightrail, and we'll use the amount that would actually get
+  # charged when we do the real transaction.
+  lightrail_share = split_tender_params['amount']
+
+  split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.create(split_tender_params, lightrail_share)
+
+  content_type :json
+  split_tender_charge.lightrail_charge.to_json
+end
 
 get '/checkout' do
   Mustache.render_file('checkout', static_params)

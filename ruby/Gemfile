@@ -6,5 +6,7 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 gem "dotenv"
 gem "json"
+gem 'lightrail_client', git: 'https://github.com/Giftbit/lightrail-client-ruby.git'
+gem 'lightrail_stripe', git: 'https://github.com/Giftbit/lightrail-stripe-ruby.git'
 gem "mustache"
 gem "sinatra"
