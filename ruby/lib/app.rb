@@ -56,7 +56,7 @@ post '/rest/simulate' do
   # charged when we do the real transaction.
   lightrail_share = split_tender_params[:amount]
 
-  split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.create(split_tender_params, lightrail_share)  # TODO this needs to be simulate instead
+  split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.simulate(split_tender_params, lightrail_share)
 
   content_type :json
   split_tender_charge.lightrail_charge.to_json
@@ -80,8 +80,8 @@ post '/rest/charge' do
   split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.create(split_tender_params, lightrail_share)
 
   Mustache.render_file('checkoutComplete', {
-      lightrailTransactionValue: '%.2f' % ((split_tender_charge&.lightrail_transaction&.value || 0) / -100),
-      stripeChargeValue: '%.2f' % ((split_tender_charge&.stripe_charge&.amount || 0) / 100)
+      lightrailTransactionValue: '%.2f' % (split_tender_charge.payment_summary.lightrail_amount / -100),
+      stripeChargeValue: '%.2f' % (split_tender_charge.payment_summary.stripe_amount / 100)
   })
 end
 
@@ -103,9 +103,11 @@ post '/rest/creditAccount' do
   request.body.rewind
   request_payload = JSON.parse request.body.read
   shopper_id = request_payload['shopperId']
-  value = request_payload['value']
+  value = request_payload['value'].to_i
 
-  # TODO how do I create a transaction?
+  Lightrail::Account.charge({ value: value, currency: static_params[:currency], shopperId: shopper_id })
+
+  "account for shopperId #{shopper_id} funded by #{value}"
 end
 
 get '/checkout' do

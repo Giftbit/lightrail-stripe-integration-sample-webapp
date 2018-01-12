@@ -10,9 +10,9 @@ GIT
 
 GIT
   remote: https://github.com/Giftbit/lightrail-stripe-ruby.git
-  revision: c43dae3ce07ca2df3981507a7a643a496a2016f2
+  revision: dd060b6dca0a6fdcf1c25d6ee780e497e08e05e5
   specs:
-    lightrail_stripe (0.6.0)
+    lightrail_stripe (0.7.0)
       faraday (~> 0.12)
       json (~> 1.7)
       openssl (~> 2.0)
