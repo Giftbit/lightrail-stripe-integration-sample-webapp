@@ -93,8 +93,7 @@ post '/rest/createAccount' do
   Lightrail::Account.create({
     shopperId: shopper_id,
     userSuppliedId: "accountcard-#{shopper_id}-#{static_params[:currency]}",
-    currency: static_params[:currency],
-    cardType: 'ACCOUNT_CARD'
+    currency: static_params[:currency]
   })
 
   "account created (or already exists) for shopperId #{static_params[:shopperId]}"
