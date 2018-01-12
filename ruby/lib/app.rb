@@ -57,8 +57,6 @@ post '/rest/simulate' do
   # charged when we do the real transaction.
   lightrail_share = split_tender_params[:amount]
 
-  binding.pry
-
   split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.simulate(split_tender_params, lightrail_share)
 
   content_type :json
