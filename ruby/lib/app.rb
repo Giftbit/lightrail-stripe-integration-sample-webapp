@@ -1,10 +1,10 @@
 require 'bundler/setup'
 require 'dotenv'
-require 'json'
 require 'sinatra'
 require 'lightrail_client'
 require 'lightrail_stripe'
 require 'mustache'
+require 'oj'
 require 'stripe'
 require 'httplog'
 
@@ -59,8 +59,9 @@ post '/rest/simulate' do
 
   split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.simulate(split_tender_params, lightrail_share)
 
+  # json split_tender_charge.lightrail_charge
   content_type :json
-  split_tender_charge.lightrail_charge.to_json
+  Oj::dump split_tender_charge.lightrail_charge
 end
 
 post '/rest/charge' do

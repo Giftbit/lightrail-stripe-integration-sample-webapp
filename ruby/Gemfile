@@ -3,10 +3,10 @@
 source "https://rubygems.org"
 
 gem "dotenv"
-gem "json"
 gem "httplog"
 gem 'lightrail_client', git: 'https://github.com/Giftbit/lightrail-client-ruby.git'
 gem 'lightrail_stripe', git: 'https://github.com/Giftbit/lightrail-stripe-ruby.git'
 gem "mustache"
+gem "oj"
 gem "sinatra"
 gem "stripe"

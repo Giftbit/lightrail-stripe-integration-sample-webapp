@@ -9,7 +9,7 @@ import {testEnvs} from "./testEnvs";
 require("dotenv").config({path: path.join(__dirname, "..", "..", ".env")});
 lightrail.configure({apiKey: process.env.LIGHTRAIL_API_KEY});
 const HOST = "http://localhost:3000";
-const DEBUG = true;
+const DEBUG = false;
 
 for (const testEnv of testEnvs) {
     describe(testEnv.name, () => {
@@ -34,7 +34,7 @@ for (const testEnv of testEnvs) {
             chai.assert.equal(res.body.value, 0);
         });
 
-        it("can simulate checkout on a user with less balance", async () => {
+        it("can simulate checkout on a user with over balance", async () => {
             await setBalance(10000);
             const res = await superagent.post(`${HOST}/rest/simulate`)
                 .send({
@@ -47,7 +47,7 @@ for (const testEnv of testEnvs) {
             chai.assert.equal(res.body.value, -10000);
         });
 
-        it("can simulate checkout on a user with more than enough balance", async () => {
+        it("can simulate checkout on a user with over balance", async () => {
             await setBalance(50000);
             const res = await superagent.post(`${HOST}/rest/simulate`)
                 .send({
@@ -92,25 +92,19 @@ for (const testEnv of testEnvs) {
             });
             cpExit = new Promise((resolve) => {
                 cp.on("exit", (code, signal) => {
-                    if (DEBUG) {
-                        console.log(`${testEnv.name} exited code=${code} signal=${signal}`);
-                    }
+                    DEBUG && console.log(`${testEnv.name} exited code=${code} signal=${signal}`);
                     resolve();
                 });
             });
             await new Promise((resolve) => {
                 cp.stdout.on("data", data => {
-                    if (DEBUG) {
-                        process.stdout.write(`${testEnv.name} stdout: ${data}`);
-                    }
+                    DEBUG && process.stdout.write(`${testEnv.name} stdout: ${data}`);
                     if (testEnv.initRegex.test(data as string)) {
                         resolve();
                     }
                 });
                 cp.stderr.on("data", data => {
-                    if (DEBUG) {
-                        process.stdout.write(`${testEnv.name} stderr: ${data}`);
-                    }
+                    DEBUG && process.stdout.write(`${testEnv.name} stderr: ${data}`);
                     if (testEnv.initRegex.test(data as string)) {
                         resolve();
                     }
