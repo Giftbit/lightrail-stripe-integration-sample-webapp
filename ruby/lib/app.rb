@@ -6,6 +6,7 @@ require 'lightrail_client'
 require 'lightrail_stripe'
 require 'mustache'
 require 'stripe'
+require 'httplog'
 
 # Load and check config.
 Dotenv.load(File.join(File.dirname(__FILE__), '..', '..', 'shared', '.env'))
@@ -55,6 +56,8 @@ post '/rest/simulate' do
   # Try to charge the whole thing to lightrail, and we'll use the amount that would actually get
   # charged when we do the real transaction.
   lightrail_share = split_tender_params[:amount]
+
+  binding.pry
 
   split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.simulate(split_tender_params, lightrail_share)
 
