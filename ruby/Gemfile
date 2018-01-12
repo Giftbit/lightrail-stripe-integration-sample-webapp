@@ -8,3 +8,4 @@ gem 'lightrail_client', git: 'https://github.com/Giftbit/lightrail-client-ruby.g
 gem 'lightrail_stripe', git: 'https://github.com/Giftbit/lightrail-stripe-ruby.git'
 gem "mustache"
 gem "sinatra"
+gem "stripe"

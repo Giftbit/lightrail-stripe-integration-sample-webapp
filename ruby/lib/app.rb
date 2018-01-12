@@ -5,6 +5,7 @@ require 'sinatra'
 require 'lightrail_client'
 require 'lightrail_stripe'
 require 'mustache'
+require 'stripe'
 
 # Load and check config.
 Dotenv.load(File.join(File.dirname(__FILE__), '..', '..', 'shared', '.env'))
@@ -18,9 +19,10 @@ if !ENV['LIGHTRAIL_API_KEY'] ||
   puts 'One or more environment variables necessary to run this demo is/are not set.  See README.md on setting these values.'
 end
 
-# Configure Lightrail.
+# Configure Lightrail and Stripe.
 Lightrail::api_key = ENV['LIGHTRAIL_API_KEY']
 Lightrail::shared_secret = ENV['LIGHTRAIL_SHARED_SECRET']
+Stripe.api_key = ENV['STRIPE_API_KEY']
 
 # Configuration for the demo.
 static_params = {
@@ -54,10 +56,57 @@ post '/rest/simulate' do
   # charged when we do the real transaction.
   lightrail_share = split_tender_params[:amount]
 
-  split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.create(split_tender_params, lightrail_share)
+  split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.create(split_tender_params, lightrail_share)  # TODO this needs to be simulate instead
 
   content_type :json
   split_tender_charge.lightrail_charge.to_json
+end
+
+post '/rest/charge' do
+  split_tender_params = {
+      amount: static_params[:orderTotal],
+      currency: static_params[:currency],
+      source: params[:source],
+      shopperId: static_params[:shopperId],
+      userSuppliedId: SecureRandom.uuid
+  }
+
+  # The amount to actually charge to Lightrail, as determined in the simulation.
+  lightrail_share = params[:'lightrail-amount']
+  if lightrail_share < 0
+    halt 400, 'Invalid value for Lightrail\'s share of the transaction'
+  end
+
+  split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.create(split_tender_params, lightrail_share)
+
+  Mustache.render_file('checkoutComplete', {
+      lightrailTransactionValue: '%.2f' % ((split_tender_charge&.lightrail_transaction&.value || 0) / -100),
+      stripeChargeValue: '%.2f' % ((split_tender_charge&.stripe_charge&.amount || 0) / 100)
+  })
+end
+
+post '/rest/createAccount' do
+  request.body.rewind
+  request_payload = JSON.parse request.body.read
+  shopper_id = request_payload['shopperId']
+
+  Lightrail::Account.create({
+    shopperId: shopper_id,
+    userSuppliedId: "accountcard-#{shopper_id}-#{static_params[:currency]}",
+    currency: static_params[:currency],
+    cardType: 'ACCOUNT_CARD'
+  })
+
+  "account created (or already exists) for shopperId #{static_params[:shopperId]}"
+end
+
+post '/rest/creditAccount' do
+  request.body.rewind
+  request_payload = JSON.parse request.body.read
+  shopper_id = request_payload['shopperId']
+  value = request_payload['value']
+
+  # TODO how do I create a transaction?
 end
 
 get '/checkout' do

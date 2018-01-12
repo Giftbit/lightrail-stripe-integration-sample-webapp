@@ -82,7 +82,7 @@ function charge(req, res) {
     // The amount to actually charge to Lightrail, as determined in the simulation.
     const lightrailShare = req.body["lightrail-amount"];
     if (lightrailShare < 0) {
-        res.status(400).send("Invalid value for Lightrail\"s share of the transaction");
+        res.status(400).send("Invalid value for Lightrail's share of the transaction");
     }
 
     const stripe = Stripe(process.env.STRIPE_API_KEY);

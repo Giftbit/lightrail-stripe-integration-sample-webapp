@@ -52,6 +52,7 @@ DEPENDENCIES
   lightrail_stripe!
   mustache
   sinatra
+  stripe
 
 BUNDLED WITH
    1.16.1
