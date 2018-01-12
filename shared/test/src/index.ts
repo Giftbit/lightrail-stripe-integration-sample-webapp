@@ -27,7 +27,7 @@ for (const testEnv of testEnvs) {
             cpExit = new Promise((resolve, reject) => {
                 cp.on("exit", (code, signal) => {
                     if (DEBUG) {
-                        console.log(`child process exited, code=${code} signal=${signal}`);
+                        console.log(`${testEnv.name} exited code=${code} signal=${signal}`);
                     }
                     resolve();
                 });
@@ -37,7 +37,7 @@ for (const testEnv of testEnvs) {
                     if (DEBUG) {
                         process.stdout.write(`${testEnv.name} stdout: ${data}`);
                     }
-                    if (testEnv.startComplete.test(data as string)) {
+                    if (testEnv.initRegex.test(data as string)) {
                         resolve();
                     }
                 });
@@ -45,7 +45,7 @@ for (const testEnv of testEnvs) {
                     if (DEBUG) {
                         process.stdout.write(`${testEnv.name} stderr: ${data}`);
                     }
-                    if (testEnv.startComplete.test(data as string)) {
+                    if (testEnv.initRegex.test(data as string)) {
                         resolve();
                     }
                 });

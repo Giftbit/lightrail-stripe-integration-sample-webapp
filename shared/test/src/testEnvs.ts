@@ -10,37 +10,20 @@ export interface TestEnv {
     cmd: string;
 
     /**
-     * stdout string that indicates the server is up.
+     * Regex over stdout and stderror that confirms the web server is up.
      */
-    startComplete: RegExp;
+    initRegex: RegExp;
 }
 
 export const testEnvs: TestEnv[] = [
     {
         name: "node",
         cmd: "npm start",
-        startComplete: /Lightrail demo running on http:\/\/localhost:3000/
+        initRegex: /Lightrail demo running on http:\/\/localhost:3000/
     },
     {
         name: "ruby",
         cmd: "ruby lib/app.rb",
-        startComplete: /WEBrick::HTTPServer#start/
+        initRegex: /WEBrick::HTTPServer#start/
     }
 ];
-
-// }
-//
-// export const testEnvs: TestEnv[] = [
-//     {
-//         name: "node",
-//         cmd: "npm",
-//         args: ["start"],
-//         startComplete: /Lightrail demo running on http:\/\/localhost:3000/
-//     },
-//     {
-//         name: "ruby",
-//         cmd: "ruby",
-//         args: ["lib/app.rb"],
-//         startComplete: /WEBrick::HTTPServer#start/
-//     }
-// ];
