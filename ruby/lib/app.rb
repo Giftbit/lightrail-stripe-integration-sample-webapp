@@ -59,7 +59,6 @@ post '/rest/simulate' do
 
   split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.simulate(split_tender_params, lightrail_share)
 
-  # json split_tender_charge.lightrail_charge
   content_type :json
   Oj::dump split_tender_charge.lightrail_charge
 end
@@ -74,7 +73,7 @@ post '/rest/charge' do
   }
 
   # The amount to actually charge to Lightrail, as determined in the simulation.
-  lightrail_share = params[:'lightrail-amount']
+  lightrail_share = params[:'lightrail-amount'].to_i
   if lightrail_share < 0
     halt 400, 'Invalid value for Lightrail\'s share of the transaction'
   end
@@ -82,8 +81,8 @@ post '/rest/charge' do
   split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.create(split_tender_params, lightrail_share)
 
   Mustache.render_file('checkoutComplete', {
-      lightrailTransactionValue: '%.2f' % (split_tender_charge.payment_summary.lightrail_amount / -100),
-      stripeChargeValue: '%.2f' % (split_tender_charge.payment_summary.stripe_amount / 100)
+      lightrailTransactionValue: '%.2f' % (split_tender_charge.payment_summary[:lightrail_amount] / -100),
+      stripeChargeValue: '%.2f' % (split_tender_charge.payment_summary[:stripe_amount] / 100)
   })
 end
 

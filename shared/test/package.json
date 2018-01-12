@@ -19,7 +19,7 @@
     "chai": "^4.1.2",
     "dotenv": "^4.0.0",
     "lightrail": "^0.1.2",
-    "lightrail-client": "^1.4.1",
+    "lightrail-client": "^1.4.2",
     "mocha": "^4.1.0",
     "superagent": "^3.8.2",
     "ts-node": "^4.1.0",

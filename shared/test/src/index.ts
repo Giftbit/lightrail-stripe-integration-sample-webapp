@@ -14,9 +14,6 @@ const DEBUG = false;
 for (const testEnv of testEnvs) {
     describe(testEnv.name, () => {
 
-        let cp: childProcess.ChildProcess;
-        let cpExit: Promise<void>;
-
         it(`stands up a server on ${HOST}`, async () => {
             await superagent.get(HOST);
         });
@@ -28,23 +25,42 @@ for (const testEnv of testEnvs) {
                     shopperId: process.env.SHOPPER_ID,
                     currency: "USD",
                     amount: 37500
-                });
+                })
+                .ok(() => true);
 
+            chai.assert.equal(res.status, 200, `res=${res.text}`);
             chai.assert.isObject(res.body);
             chai.assert.equal(res.body.value, 0);
         });
 
-        it("can simulate checkout on a user with over balance", async () => {
+        it("can simulate checkout on a user with under balance", async () => {
             await setBalance(10000);
             const res = await superagent.post(`${HOST}/rest/simulate`)
                 .send({
                     shopperId: process.env.SHOPPER_ID,
                     currency: "USD",
                     amount: 37500
-                });
+                })
+                .ok(() => true);
 
+            chai.assert.equal(res.status, 200, `res=${res.text}`);
             chai.assert.isObject(res.body);
             chai.assert.equal(res.body.value, -10000);
+        });
+
+        it("can simulate checkout on a user with exact balance", async () => {
+            await setBalance(37500);
+            const res = await superagent.post(`${HOST}/rest/simulate`)
+                .send({
+                    shopperId: process.env.SHOPPER_ID,
+                    currency: "USD",
+                    amount: 37500
+                })
+                .ok(() => true);
+
+            chai.assert.equal(res.status, 200, `res=${res.text}`);
+            chai.assert.isObject(res.body);
+            chai.assert.equal(res.body.value, -37500);
         });
 
         it("can simulate checkout on a user with over balance", async () => {
@@ -54,23 +70,123 @@ for (const testEnv of testEnvs) {
                     shopperId: process.env.SHOPPER_ID,
                     currency: "USD",
                     amount: 37500
-                });
+                })
+                .ok(() => true);
 
+            chai.assert.equal(res.status, 200, `res=${res.text}`);
             chai.assert.isObject(res.body);
             chai.assert.equal(res.body.value, -37500);
         });
 
+        it("can checkout a user with no balance", async () => {
+            await setBalance(0);
+            const res = await superagent.post(`${HOST}/rest/charge`)
+                .type("form")
+                .send({
+                    shopperId: process.env.SHOPPER_ID,
+                    currency: "USD",
+                    orderTotal: 37500,
+                    "lightrail-amount": 0,
+                    source: "tok_visa"
+                })
+                .ok(() => true);
+
+            chai.assert.equal(res.status, 200, `res=${res.text}`);
+        });
+
+        it("can checkout a user with under balance", async () => {
+            await setBalance(10000);
+            const res = await superagent.post(`${HOST}/rest/charge`)
+                .type("form")
+                .send({
+                    shopperId: process.env.SHOPPER_ID,
+                    currency: "USD",
+                    orderTotal: 37500,
+                    "lightrail-amount": 10000,
+                    source: "tok_visa"
+                })
+                .ok(() => true);
+
+            chai.assert.equal(res.status, 200, `res=${res.text}`);
+        });
+
+        it("can checkout a user with exact balance", async () => {
+            await setBalance(37500);
+            const res = await superagent.post(`${HOST}/rest/charge`)
+                .type("form")
+                .send({
+                    shopperId: process.env.SHOPPER_ID,
+                    currency: "USD",
+                    orderTotal: 37500,
+                    "lightrail-amount": 37500,
+                    source: null
+                })
+                .ok(() => true);
+
+            chai.assert.equal(res.status, 200, `res=${res.text}`);
+        });
+
+        it("can checkout a user with over balance", async () => {
+            await setBalance(50000);
+            const res = await superagent.post(`${HOST}/rest/charge`)
+                .type("form")
+                .send({
+                    shopperId: process.env.SHOPPER_ID,
+                    currency: "USD",
+                    orderTotal: 37500,
+                    "lightrail-amount": 37500,
+                    source: null
+                })
+                .ok(() => true);
+
+            chai.assert.equal(res.status, 200, `res=${res.text}`);
+        });
+
+        it("can create and credit an account", async () => {
+            const shopperId = `sample-webapp-unittest-${uuid.v4()}`;
+            const createRes = await superagent.post(`${HOST}/rest/createAccount`)
+                .send({shopperId})
+                .ok(() => true);
+
+            chai.assert.equal(createRes.status, 200, `createRes=${createRes.text}`);
+
+            const contact = await lightrail.contacts.getContactByAnyIdentifier({shopperId});
+            chai.assert.isObject(contact, "contact created");
+            chai.assert.equal(contact.userSuppliedId, shopperId, "with new shopperId");
+
+            const cardsRes = await lightrail.cards.getCards({contactId: contact.contactId, cardType: lightrail.model.Card.CardType.ACCOUNT_CARD, currency: "USD"});
+            chai.assert.lengthOf(cardsRes.cards, 1, "has one card");
+            chai.assert.equal(cardsRes.cards[0].contactId, contact.contactId, "has the right contactId");
+            chai.assert.equal(cardsRes.cards[0].cardType, lightrail.model.Card.CardType.ACCOUNT_CARD, "is an account card");
+
+            const creditRes = await superagent.post(`${HOST}/rest/creditAccount`)
+                .send({
+                    shopperId,
+                    value: 500
+                });
+
+            chai.assert.equal(creditRes.status, 200, `creditRes=${creditRes.text}`);
+
+            const details = await lightrail.cards.getDetails(cardsRes.cards[0]);
+            chai.assert.isObject(details, "got card details");
+            chai.assert.lengthOf(details.valueStores, 1, "has 1 value store");
+            chai.assert.equal(details.valueStores[0].value, 500, "value store holds 500");
+        });
+
+        /**
+         * Set the balance on the account of the .env SHOPPER_ID.
+         */
         async function setBalance(value: number): Promise<void> {
             const contact = await lightrail.contacts.getContactByAnyIdentifier({shopperId: process.env.SHOPPER_ID});
             if (!contact) {
                 throw new Error(`could not find shopper with shopperId '${process.env.SHOPPER_ID}'`);
             }
 
-            const cards = await lightrail.cards.getCards({contactId: contact.contactId, cardType: lightrail.model.Card.CardType.ACCOUNT_CARD, currency: "USD"});
-            if (cards.cards.length !== 1) {
+            const cardsRes = await lightrail.cards.getCards({contactId: contact.contactId, cardType: lightrail.model.Card.CardType.ACCOUNT_CARD, currency: "USD"});
+            if (cardsRes.cards.length !== 1) {
                 throw new Error(`could not find account card for contactId '${contact.contactId}' currency USD`);
             }
-            const card = cards.cards[0];
+            const card = cardsRes.cards[0];
 
             const details = await lightrail.cards.getDetails(card);
             if (details.valueStores[0].value !== value) {
@@ -81,6 +197,9 @@ for (const testEnv of testEnvs) {
                 });
             }
         }
+
+        let cp: childProcess.ChildProcess;
+        let cpExit: Promise<void>;
 
         before(async function () {
             this.timeout(30000);
