@@ -20,6 +20,10 @@ export const testEnvs: TestEnv[] = [
         name: "node",
         cmd: "npm start",
         initRegex: /Lightrail demo running on http:\/\/localhost:3000/
+    },{
+        name: "php",
+        cmd: "docker-compose up",
+        initRegex: /Apache.* configured -- resuming normal operations/
     },
     {
         name: "ruby",
