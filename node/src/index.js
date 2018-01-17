@@ -113,8 +113,7 @@ function createAccount(req, res) {
         },
         {
             userSuppliedId: `accountcard-${shopperId}-${staticParams.currency}`,
-            currency: staticParams.currency,
-            cardType: "ACCOUNT_CARD"
+            currency: staticParams.currency
         })
         .then(() => {
             res.send(`account created (or already exists) for shopperId ${shopperId}`);
