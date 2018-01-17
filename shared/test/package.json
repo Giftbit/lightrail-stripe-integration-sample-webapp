@@ -7,6 +7,10 @@
     "start": "npm run test",
     "test": "mocha --timeout=10000 --recursive --throw-deprecation --require ts-node/register \"src/index.ts\""
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Giftbit/stripe-integration-sample-node-webapp.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

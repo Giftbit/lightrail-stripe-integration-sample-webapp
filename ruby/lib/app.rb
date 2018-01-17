@@ -38,6 +38,7 @@ static_params = {
 
 # Configure Sinatra.
 set :port, 3000
+set :show_exceptions, false
 Mustache.template_path = File.join(__dir__, '..', '..', 'shared', 'views')
 Mustache.template_extension = 'html'
 
@@ -125,6 +126,12 @@ end
 
 get '/buyCards' do
   Mustache.render_file('buyCards', static_params)
+end
+
+error do
+  status 500
+  e = env['sinatra.error']
+  "Error: #{e.message}"
 end
 
 # Serve static files

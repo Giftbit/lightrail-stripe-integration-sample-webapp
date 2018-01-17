@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/Giftbit/lightrail-client-ruby.git
-  revision: 22f3d8805d712b041c2af51a286fb3a87dd06e00
+  revision: cc00e86ed036e90359a51a22ab88f035a67cde94
   specs:
-    lightrail_client (0.6.2)
+    lightrail_client (0.6.3)
       faraday (~> 0.12)
       json (~> 1.7)
       jwt (~> 2.1)
@@ -10,9 +10,9 @@ GIT
 
 GIT
   remote: https://github.com/Giftbit/lightrail-stripe-ruby.git
-  revision: f4428af5f917f68e32faa280d96aad69733ff958
+  revision: 0848ef653d85c2149a1ee09b2346dd1e1afd6992
   specs:
-    lightrail_stripe (0.7.1)
+    lightrail_stripe (0.7.2)
       faraday (~> 0.12)
       json (~> 1.7)
       openssl (~> 2.0)
@@ -49,6 +49,7 @@ GEM
 
 PLATFORMS
   ruby
+  x86-mingw32
 
 DEPENDENCIES
   dotenv
