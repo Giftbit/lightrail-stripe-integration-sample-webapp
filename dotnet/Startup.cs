@@ -5,9 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Nustache.Core;
 
 namespace dotnet
 {
@@ -47,10 +50,32 @@ namespace dotnet
 
             app.UseMvc(routes =>
             {
+                routes.MapGet("manageAccount", GenerateMustacheRequestDelegate("manageAccount"));
+                routes.MapGet("buyCards", GenerateMustacheRequestDelegate("buyCards"));
+                routes.MapGet("redeem", GenerateMustacheRequestDelegate("redeem"));
+                routes.MapGet("checkout", GenerateMustacheRequestDelegate("checkout"));
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private RequestDelegate GenerateMustacheRequestDelegate(string viewName) {
+            return async (context) =>
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "shared", "views", $"{viewName}.html");
+                var data = new {
+                    title = Environment.GetEnvironmentVariable("TITLE"),
+                    orderTotal = int.Parse(Environment.GetEnvironmentVariable("ORDER_TOTAL")),
+                    orderTotalDisplay = int.Parse(Environment.GetEnvironmentVariable("ORDER_TOTAL")) / 100.0,
+                    currency = "USD",
+                    stripePublicKey = Environment.GetEnvironmentVariable("STRIPE_PUBLISHABLE_KEY"),
+                    shopperId = Environment.GetEnvironmentVariable("SHOPPER_ID"),
+                    shopperToken = "TODO"   // TODO
+                };
+                await context.Response.WriteAsync(Render.FileToString(filePath, data));
+            };
         }
     }
 }

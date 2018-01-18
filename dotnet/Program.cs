@@ -17,6 +17,7 @@ namespace dotnet
 
         public static void Main(string[] args)
         {
+            // DotNetEnv 1.1.0 does not support quotes unescaping, but the next version should.
             DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), "..", "shared", ".env"));
             foreach (var requiredVar in RequiredEnvVars)
             {
