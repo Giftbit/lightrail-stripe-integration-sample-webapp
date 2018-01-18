@@ -1,0 +1,51 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    dotenv (2.2.1)
+    faraday (0.13.1)
+      multipart-post (>= 1.2, < 3)
+    json (1.8.6)
+    jwt (2.1.0)
+    lightrail_client (1.0.0)
+      faraday (~> 0.12)
+      json (~> 1.7)
+      jwt (~> 2.1)
+      openssl (~> 2.0)
+    lightrail_stripe (1.0.0)
+      faraday (~> 0.12)
+      json (~> 1.7)
+      lightrail_client (~> 1.0)
+      openssl (~> 2.0)
+      stripe (~> 3.0)
+    multipart-post (2.0.0)
+    mustache (1.0.5)
+    mustermann (1.0.1)
+    oj (3.3.10)
+    openssl (2.1.0)
+    rack (2.0.3)
+    rack-protection (2.0.0)
+      rack
+    sinatra (2.0.0)
+      mustermann (~> 1.0)
+      rack (~> 2.0)
+      rack-protection (= 2.0.0)
+      tilt (~> 2.0)
+    stripe (3.9.1)
+      faraday (~> 0.10)
+    tilt (2.0.8)
+
+PLATFORMS
+  ruby
+  x86-mingw32
+
+DEPENDENCIES
+  dotenv
+  lightrail_client (~> 1.0)
+  lightrail_stripe (~> 1.0)
+  mustache
+  oj
+  sinatra
+  stripe
+
+BUNDLED WITH
+   1.16.1

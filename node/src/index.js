@@ -19,7 +19,7 @@ if (!process.env.LIGHTRAIL_API_KEY
     console.error("One or more environment variables necessary to run this demo is/are not set.  See README.md on setting these values.");
 }
 
-// Configure the Lightrail library.
+// Configure Lightrail.
 lightrail.configure({
     apiKey: process.env.LIGHTRAIL_API_KEY,
     sharedSecret: process.env.LIGHTRAIL_SHARED_SECRET
@@ -72,18 +72,15 @@ function charge(req, res) {
     console.log("charge body=", req.body);
 
     const splitTenderParams = {
-        amount: staticParams.orderTotal,
-        currency: staticParams.currency,
+        amount: req.body.orderTotal,
+        currency: req.body.currency,
         source: req.body.source,
-        shopperId: staticParams.shopperId,
+        shopperId: req.body.shopperId,
         userSuppliedId: uuid.v4()
     };
 
     // The amount to actually charge to Lightrail, as determined in the simulation.
     const lightrailShare = req.body["lightrail-amount"];
-    if (lightrailShare < 0) {
-        res.status(400).send("Invalid value for Lightrail\"s share of the transaction");
-    }
 
     const stripe = Stripe(process.env.STRIPE_API_KEY);
     lightrailStripe.createSplitTenderCharge(splitTenderParams, lightrailShare, stripe)
