@@ -38,9 +38,11 @@ namespace dotnet
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseStaticFiles(new StaticFileOptions()
+            // Similar to app.UseStaticFiles() and app.UseDefaultFiles()
+            app.UseFileServer(new FileServerOptions()
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "..", "shared", "static"))
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "..", "shared", "static")),
+                EnableDirectoryBrowsing = false
             });
 
             app.UseMvc(routes =>
