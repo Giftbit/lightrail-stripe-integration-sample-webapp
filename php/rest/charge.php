@@ -8,13 +8,6 @@ $shopperId = $staticParams["shopperId"];
 $token = $_POST['source'];
 $lightrailShare = intval($_POST['lightrail-amount']);
 
-if ($lightrailShare < 0) {
-    echo '<html>
-			Invalid value for Lightrail\'s share of the transaction.         
-        </html>';
-    exit;
-}
-
 if (!isset($token)) {
     echo '<html>
 			Stripe token not found.         

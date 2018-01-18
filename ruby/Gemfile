@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gem "dotenv"
+gem 'lightrail_client', '~> 1.0'
+gem 'lightrail_stripe', '~> 1.0'
+gem "mustache"
+gem "oj"
+gem "sinatra"
+gem "stripe"
