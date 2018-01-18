@@ -3,9 +3,8 @@
 source "https://rubygems.org"
 
 gem "dotenv"
-gem "httplog"
-gem 'lightrail_client', git: 'https://github.com/Giftbit/lightrail-client-ruby.git'
-gem 'lightrail_stripe', git: 'https://github.com/Giftbit/lightrail-stripe-ruby.git'
+gem 'lightrail_client', '~> 1.0'
+gem 'lightrail_stripe', '~> 1.0'
 gem "mustache"
 gem "oj"
 gem "sinatra"

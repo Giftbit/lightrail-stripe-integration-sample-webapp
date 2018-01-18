@@ -6,7 +6,6 @@ require 'lightrail_stripe'
 require 'mustache'
 require 'oj'
 require 'stripe'
-require 'httplog'
 
 # Load and check config.
 Dotenv.load(File.join(File.dirname(__FILE__), '..', '..', 'shared', '.env'))
@@ -39,6 +38,7 @@ static_params = {
 # Configure Sinatra.
 set :port, 3000
 set :show_exceptions, false
+$stdout.sync = true
 Mustache.template_path = File.join(__dir__, '..', '..', 'shared', 'views')
 Mustache.template_extension = 'html'
 
@@ -66,18 +66,15 @@ end
 
 post '/rest/charge' do
   split_tender_params = {
-      amount: static_params[:orderTotal],
-      currency: static_params[:currency],
+      amount: params[:orderTotal].to_i,
+      currency: params[:currency],
       source: params[:source],
-      shopperId: static_params[:shopperId],
+      shopperId: params[:shopperId],
       userSuppliedId: SecureRandom.uuid
   }
 
   # The amount to actually charge to Lightrail, as determined in the simulation.
   lightrail_share = params[:'lightrail-amount'].to_i
-  if lightrail_share < 0
-    halt 400, 'Invalid value for Lightrail\'s share of the transaction'
-  end
 
   split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.create(split_tender_params, lightrail_share)
 
