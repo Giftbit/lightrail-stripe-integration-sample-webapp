@@ -29,4 +29,6 @@ $res = \Lightrail\LightrailAccount::createTransaction(array(
     'userSuppliedId' => uniqid(),
     'currency' => $staticParams['currency']
 ));
+
+header('Content-Type: text/plain');
 echo 'account for shopperId ' . $requestBody['shopperId'] . ' funded by ' . $requestBody['value'];

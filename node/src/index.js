@@ -113,6 +113,7 @@ function createAccount(req, res) {
             currency: staticParams.currency
         })
         .then(() => {
+            res.header("Content-Type", "text/plain");
             res.send(`account created (or already exists) for shopperId ${shopperId}`);
         })
         .catch(err => {
@@ -145,6 +146,7 @@ function creditAccount(req, res) {
             userSuppliedId: uuid.v4()
         })
         .then(() => {
+            res.header("Content-Type", "text/plain");
             res.send(`account for shopperId ${shopperId} funded by ${value}`);
         })
         .catch(err => {

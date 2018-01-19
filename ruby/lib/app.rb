@@ -95,6 +95,7 @@ post '/rest/createAccount' do
     currency: static_params[:currency]
   })
 
+  content_type :text
   "account created (or already exists) for shopperId #{static_params[:shopperId]}"
 end
 
@@ -106,6 +107,7 @@ post '/rest/creditAccount' do
 
   Lightrail::Account.charge({ value: value, currency: static_params[:currency], shopperId: shopper_id })
 
+  content_type :text
   "account for shopperId #{shopper_id} funded by #{value}"
 end
 

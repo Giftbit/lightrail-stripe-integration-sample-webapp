@@ -15,7 +15,8 @@ for (const testEnv of testEnvs) {
     describe(testEnv.name, () => {
 
         it(`stands up a server on ${HOST}`, async () => {
-            await superagent.get(HOST);
+            const res = await superagent.get(HOST);
+            chai.assert.equal(res.status, 200, `res=${res.text}`);
         });
 
         it("can simulate checkout on a user with no balance", async () => {
@@ -29,8 +30,9 @@ for (const testEnv of testEnvs) {
                 .ok(() => true);
 
             chai.assert.equal(res.status, 200, `res=${res.text}`);
+            chai.assert(res.header["content-type"] && /^application\/json/.test(res.header["content-type"]), `content type is JSON: ${res.header["content-type"]}`);
             chai.assert.isObject(res.body);
-            chai.assert.equal(res.body.value, 0);
+            chai.assert.equal(res.body.value, 0, `body=${JSON.stringify(res.body)}`);
         });
 
         it("can simulate checkout on a user with under balance", async () => {
@@ -44,8 +46,9 @@ for (const testEnv of testEnvs) {
                 .ok(() => true);
 
             chai.assert.equal(res.status, 200, `res=${res.text}`);
+            chai.assert(res.header["content-type"] && /^application\/json/.test(res.header["content-type"]), `content type is JSON: ${res.header["content-type"]}`);
             chai.assert.isObject(res.body);
-            chai.assert.equal(res.body.value, -10000);
+            chai.assert.equal(res.body.value, -10000, `body=${JSON.stringify(res.body)}`);
         });
 
         it("can simulate checkout on a user with exact balance", async () => {
@@ -59,8 +62,9 @@ for (const testEnv of testEnvs) {
                 .ok(() => true);
 
             chai.assert.equal(res.status, 200, `res=${res.text}`);
+            chai.assert(res.header["content-type"] && /^application\/json/.test(res.header["content-type"]), `content type is JSON: ${res.header["content-type"]}`);
             chai.assert.isObject(res.body);
-            chai.assert.equal(res.body.value, -37500);
+            chai.assert.equal(res.body.value, -37500, `body=${JSON.stringify(res.body)}`);
         });
 
         it("can simulate checkout on a user with over balance", async () => {
@@ -74,8 +78,9 @@ for (const testEnv of testEnvs) {
                 .ok(() => true);
 
             chai.assert.equal(res.status, 200, `res=${res.text}`);
+            chai.assert(res.header["content-type"] && /^application\/json/.test(res.header["content-type"]), `content type is JSON: ${res.header["content-type"]}`);
             chai.assert.isObject(res.body);
-            chai.assert.equal(res.body.value, -37500);
+            chai.assert.equal(res.body.value, -37500, `body=${JSON.stringify(res.body)}`);
         });
 
         it("can checkout a user with no balance", async () => {
@@ -91,7 +96,8 @@ for (const testEnv of testEnvs) {
                 })
                 .ok(() => true);
 
-            chai.assert.equal(res.status, 200, `res=${res.text}`);
+            chai.assert.equal(res.status, 200, `body=${JSON.stringify(res.body)}`);
+            chai.assert(res.header["content-type"] && /^text\/html/.test(res.header["content-type"]), `content type is HTML: ${res.header["content-type"]}`);
         });
 
         it("can checkout a user with under balance", async () => {
@@ -107,7 +113,8 @@ for (const testEnv of testEnvs) {
                 })
                 .ok(() => true);
 
-            chai.assert.equal(res.status, 200, `res=${res.text}`);
+            chai.assert.equal(res.status, 200, `body=${JSON.stringify(res.body)}`);
+            chai.assert(res.header["content-type"] && /^text\/html/.test(res.header["content-type"]), `content type is HTML: ${res.header["content-type"]}`);
         });
 
         it("can checkout a user with exact balance", async () => {
@@ -123,7 +130,8 @@ for (const testEnv of testEnvs) {
                 })
                 .ok(() => true);
 
-            chai.assert.equal(res.status, 200, `res=${res.text}`);
+            chai.assert.equal(res.status, 200, `body=${JSON.stringify(res.body)}`);
+            chai.assert(res.header["content-type"] && /^text\/html/.test(res.header["content-type"]), `content type is HTML: ${res.header["content-type"]}`);
         });
 
         it("can checkout a user with over balance", async () => {
@@ -139,7 +147,8 @@ for (const testEnv of testEnvs) {
                 })
                 .ok(() => true);
 
-            chai.assert.equal(res.status, 200, `res=${res.text}`);
+            chai.assert.equal(res.status, 200, `body=${JSON.stringify(res.body)}`);
+            chai.assert(res.header["content-type"] && /^text\/html/.test(res.header["content-type"]), `content type is HTML: ${res.header["content-type"]}`);
         });
 
         it("can create and credit an account", async () => {
@@ -149,6 +158,7 @@ for (const testEnv of testEnvs) {
                 .ok(() => true);
 
             chai.assert.equal(createRes.status, 200, `createRes=${createRes.text}`);
+            chai.assert(createRes.header["content-type"] && /^text\/plain/.test(createRes.header["content-type"]), `content type is text: ${createRes.header["content-type"]}`);
 
             const contact = await lightrail.contacts.getContactByAnyIdentifier({shopperId});
             chai.assert.isObject(contact, "contact created");
@@ -166,6 +176,7 @@ for (const testEnv of testEnvs) {
                 });
 
             chai.assert.equal(creditRes.status, 200, `creditRes=${creditRes.text}`);
+            chai.assert(creditRes.header["content-type"] && /^text\/plain/.test(creditRes.header["content-type"]), `content type is text: ${creditRes.header["content-type"]}`);
 
             const details = await lightrail.cards.getDetails(cardsRes.cards[0]);
             chai.assert.isObject(details, "got card details");
@@ -197,7 +208,7 @@ for (const testEnv of testEnvs) {
                 });
             }
         }
-
+        
         let cp: childProcess.ChildProcess;
         let cpExit: Promise<void>;
 
@@ -231,7 +242,8 @@ for (const testEnv of testEnvs) {
             });
         });
 
-        after(async () => {
+        after(async function () {
+            this.timeout(30000);
             cp.kill();
             await cpExit;
 
