@@ -17,17 +17,22 @@ export interface TestEnv {
 
 export const testEnvs: TestEnv[] = [
     {
-        name: "node",
-        cmd: "npm start",
-        initRegex: /Lightrail demo running on http:\/\/localhost:3000/
-    },{
-        name: "php",
-        cmd: "docker-compose up",
-        initRegex: /Apache.* configured -- resuming normal operations/
+        name: "dotnet",
+        cmd: "dotnet run",
+        initRegex: /Now listening on: http:\/\/(127\.0\.0\.1|localhost):3000/
     },
-    {
-        name: "ruby",
-        cmd: "ruby lib/app.rb",
-        initRegex: /WEBrick::HTTPServer#start/
-    }
+    // {
+    //     name: "node",
+    //     cmd: "npm start",
+    //     initRegex: /Lightrail demo running on http:\/\/localhost:3000/
+    // },{
+    //     name: "php",
+    //     cmd: "docker-compose up",
+    //     initRegex: /Apache.* configured -- resuming normal operations/
+    // },
+    // {
+    //     name: "ruby",
+    //     cmd: "ruby lib/app.rb",
+    //     initRegex: /WEBrick::HTTPServer#start/
+    // }
 ];

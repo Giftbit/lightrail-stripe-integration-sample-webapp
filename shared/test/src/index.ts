@@ -216,7 +216,7 @@ for (const testEnv of testEnvs) {
             this.timeout(30000);
             const cwd = path.join(__dirname, "..", "..", "..", testEnv.name);
             cp = childProcess.exec(`${testEnv.cmd}`, {cwd}, (error) => {
-                if (error && (error as any).signal !== 'SIGTERM') {
+                if (error && (error as any).signal !== 'SIGTERM' && (error as any).signal !== 'SIGKILL') {
                     console.log(error);
                 }
             });
@@ -244,8 +244,16 @@ for (const testEnv of testEnvs) {
 
         after(async function () {
             this.timeout(30000);
-            cp.kill();
-            await cpExit;
+            cp.kill("SIGTERM");
+
+            console.log(Promise.all, Promise.race, Promise);
+            await Promise.race([cpExit, new Promise(resolve => setTimeout(resolve, 10000))]);
+
+            if (cp && !cp.killed) {
+                console.error(`${testEnv.name} did not exit nicely after 10 seconds; hard killing`);
+                cp.kill("SIGKILL");
+                await cpExit;
+            }
 
             cp = null;
             cpExit = null;
