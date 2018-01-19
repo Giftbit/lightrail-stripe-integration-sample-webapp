@@ -33,4 +33,6 @@ $param = array(
     'amount' => $requestBody['amount']
 );
 $splitTenderCharge = \LightrailStripe\SplitTenderCharge::simulate($param, $requestBody['amount']);
+
+header('Content-Type: application/json');
 echo $splitTenderCharge->lightrailTransaction->getRawJson();

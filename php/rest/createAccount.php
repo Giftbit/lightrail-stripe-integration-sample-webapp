@@ -29,4 +29,6 @@ $res = \Lightrail\LightrailAccount::createAccountCard(array(
     'currency' => $staticParams['currency'],
     'cardType' => 'ACCOUNT_CARD'
 ));
+
+header('Content-Type: text/plain');
 echo 'account created (or already exists) for shopperId ' . $requestBody['shopperId'];
