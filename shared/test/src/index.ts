@@ -17,7 +17,16 @@ for (const testEnv of testEnvs) {
         it(`stands up a server on ${HOST}`, async () => {
             const res = await superagent.get(HOST);
             chai.assert.equal(res.status, 200, `res=${res.text}`);
+            chai.assert.isAtLeast(res.text.length, 1, "has content");
         });
+
+        for (const path of ["/redeem", "/checkout", "/buyCards", "/manageAccount"]) {
+            it(`renders ${path}`, async () => {
+                const res = await superagent.get(`${HOST}${path}`);
+                chai.assert.equal(res.status, 200, `res=${res.text}`);
+                chai.assert.isAtLeast(res.text.length, 1, "has content");
+            });
+        }
 
         it("can simulate checkout on a user with no balance", async () => {
             await setBalance(0);
