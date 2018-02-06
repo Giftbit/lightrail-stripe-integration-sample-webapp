@@ -40,7 +40,7 @@ for (const testEnv of testEnvs) {
 
             chai.assert.equal(res.status, 200, `res=${res.text}`);
             chai.assert(res.header["content-type"] && /^application\/json/.test(res.header["content-type"]), `content type is JSON: ${res.header["content-type"]}`);
-            chai.assert.isObject(res.body);
+            chai.assert.isObject(res.body, `res=${res.text}`);
             chai.assert.equal(res.body.value, 0, `body=${JSON.stringify(res.body)}`);
         });
 
@@ -56,7 +56,7 @@ for (const testEnv of testEnvs) {
 
             chai.assert.equal(res.status, 200, `res=${res.text}`);
             chai.assert(res.header["content-type"] && /^application\/json/.test(res.header["content-type"]), `content type is JSON: ${res.header["content-type"]}`);
-            chai.assert.isObject(res.body);
+            chai.assert.isObject(res.body, `res=${res.text}`);
             chai.assert.equal(res.body.value, -10000, `body=${JSON.stringify(res.body)}`);
         });
 
@@ -72,7 +72,7 @@ for (const testEnv of testEnvs) {
 
             chai.assert.equal(res.status, 200, `res=${res.text}`);
             chai.assert(res.header["content-type"] && /^application\/json/.test(res.header["content-type"]), `content type is JSON: ${res.header["content-type"]}`);
-            chai.assert.isObject(res.body);
+            chai.assert.isObject(res.body, `res=${res.text}`);
             chai.assert.equal(res.body.value, -37500, `body=${JSON.stringify(res.body)}`);
         });
 
@@ -88,7 +88,7 @@ for (const testEnv of testEnvs) {
 
             chai.assert.equal(res.status, 200, `res=${res.text}`);
             chai.assert(res.header["content-type"] && /^application\/json/.test(res.header["content-type"]), `content type is JSON: ${res.header["content-type"]}`);
-            chai.assert.isObject(res.body);
+            chai.assert.isObject(res.body, `res=${res.text}`);
             chai.assert.equal(res.body.value, -37500, `body=${JSON.stringify(res.body)}`);
         });
 
@@ -99,8 +99,8 @@ for (const testEnv of testEnvs) {
                 .send({
                     shopperId: process.env.SHOPPER_ID,
                     currency: "USD",
-                    orderTotal: 37500,
-                    "lightrail-amount": 0,
+                    amount: 37500,
+                    lightrailAmount: 0,
                     source: "tok_visa"
                 })
                 .ok(() => true);
@@ -116,8 +116,8 @@ for (const testEnv of testEnvs) {
                 .send({
                     shopperId: process.env.SHOPPER_ID,
                     currency: "USD",
-                    orderTotal: 37500,
-                    "lightrail-amount": 10000,
+                    amount: 37500,
+                    lightrailAmount: 10000,
                     source: "tok_visa"
                 })
                 .ok(() => true);
@@ -133,8 +133,8 @@ for (const testEnv of testEnvs) {
                 .send({
                     shopperId: process.env.SHOPPER_ID,
                     currency: "USD",
-                    orderTotal: 37500,
-                    "lightrail-amount": 37500,
+                    amount: 37500,
+                    lightrailAmount: 37500,
                     source: null
                 })
                 .ok(() => true);
@@ -150,8 +150,8 @@ for (const testEnv of testEnvs) {
                 .send({
                     shopperId: process.env.SHOPPER_ID,
                     currency: "USD",
-                    orderTotal: 37500,
-                    "lightrail-amount": 37500,
+                    amount: 37500,
+                    lightrailAmount: 37500,
                     source: null
                 })
                 .ok(() => true);
@@ -254,8 +254,9 @@ for (const testEnv of testEnvs) {
         after(async function () {
             this.timeout(30000);
             cp.kill("SIGTERM");
+            cp.stdout.destroy();
+            cp.stderr.destroy();
 
-            console.log(Promise.all, Promise.race, Promise);
             await Promise.race([cpExit, new Promise(resolve => setTimeout(resolve, 10000))]);
 
             if (cp && !cp.killed) {

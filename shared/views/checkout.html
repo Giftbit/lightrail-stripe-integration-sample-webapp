@@ -75,7 +75,10 @@
                                                 <div id="card-element"></div>
                                                 <div id="card-errors" role="alert"></div>
                                             </div>
-                                            <input id="lightrail-amount" name="lightrail-amount" type="hidden"/>
+                                            <input name="amount" type="hidden" value="{{orderTotal}}"/>
+                                            <input name="currency" type="hidden" value="{{currency}}"/>
+                                            <input name="shopperId" type="hidden" value="{{shopperId}}"/>
+                                            <input id="lightrail-amount" name="lightrailAmount" type="hidden"/>
                                             <div id="lightrail-errors" role="alert"></div>
                                             <button class="button full-width dark">Pay <span id="stripe-share-button"></span></button>
                                         </form>
@@ -141,7 +144,7 @@
             function updateSplitPoint(lightrailShare) {
                 stripeShare = total - lightrailShare;
                 $("#lightrail-share").html("$ " + (lightrailShare / 100).toFixed(2));
-                $("#lightrail-amount").val(lightrailShare);
+                $("#lightrailAmount").val(lightrailShare);
                 $("#stripe-share").html("$ " + (stripeShare / 100).toFixed(2));
                 $("#stripe-share-button").html("$ " + (stripeShare / 100).toFixed(2));
             }

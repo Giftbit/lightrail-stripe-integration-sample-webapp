@@ -72,7 +72,7 @@ function charge(req, res) {
     console.log("charge body=", req.body);
 
     const splitTenderParams = {
-        amount: req.body.orderTotal,
+        amount: +req.body.amount,
         currency: req.body.currency,
         source: req.body.source,
         shopperId: req.body.shopperId,
@@ -80,7 +80,7 @@ function charge(req, res) {
     };
 
     // The amount to actually charge to Lightrail, as determined in the simulation.
-    const lightrailShare = req.body["lightrail-amount"];
+    const lightrailShare = +req.body.lightrailAmount;
 
     const stripe = Stripe(process.env.STRIPE_API_KEY);
     lightrailStripe.createSplitTenderCharge(splitTenderParams, lightrailShare, stripe)

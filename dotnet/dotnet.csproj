@@ -6,8 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="1.1.0" />
+    <PackageReference Include="Lightrail-Client" Version="0.0.1" />
+    <PackageReference Include="Lightrail-Stripe" Version="0.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
     <PackageReference Include="nustache" Version="1.16.0.4" />
+    <PackageReference Include="Stripe.net" Version="12.1.0" />
   </ItemGroup>
 
   <ItemGroup>
