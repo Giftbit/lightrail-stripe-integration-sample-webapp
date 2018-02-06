@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Lightrail;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +7,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Nustache.Core;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace dotnet
 {
@@ -62,6 +63,12 @@ namespace dotnet
         }
 
         private RequestDelegate GenerateMustacheRequestDelegate(string viewName) {
+            var lightrail = new LightrailClient
+            {
+                ApiKey = Environment.GetEnvironmentVariable("LIGHTRAIL_API_KEY"),
+                SharedSecret = Environment.GetEnvironmentVariable("LIGHTRAIL_SHARED_SECRET")
+            };
+
             return async (context) =>
             {
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "shared", "views", $"{viewName}.html");
@@ -72,7 +79,7 @@ namespace dotnet
                     currency = "USD",
                     stripePublicKey = Environment.GetEnvironmentVariable("STRIPE_PUBLISHABLE_KEY"),
                     shopperId = Environment.GetEnvironmentVariable("SHOPPER_ID"),
-                    shopperToken = "TODO"   // TODO
+                    shopperToken = lightrail.GenerateShopperToken(new Lightrail.Model.ContactIdentifier { ShopperId = Environment.GetEnvironmentVariable("SHOPPER_ID")})
                 };
                 await context.Response.WriteAsync(Render.FileToString(filePath, data));
             };
