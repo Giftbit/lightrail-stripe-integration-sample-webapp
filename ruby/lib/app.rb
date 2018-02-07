@@ -66,7 +66,7 @@ end
 
 post '/rest/charge' do
   split_tender_params = {
-      amount: params[:orderTotal].to_i,
+      amount: params[:amount].to_i,
       currency: params[:currency],
       source: params[:source],
       shopperId: params[:shopperId],
@@ -74,7 +74,7 @@ post '/rest/charge' do
   }
 
   # The amount to actually charge to Lightrail, as determined in the simulation.
-  lightrail_share = params[:'lightrail-amount'].to_i
+  lightrail_share = params[:lightrailAmount].to_i
 
   split_tender_charge = Lightrail::StripeLightrailSplitTenderCharge.create(split_tender_params, lightrail_share)
 

@@ -200,16 +200,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v5.6.0",
+            "version": "v5.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "0922533c9db11292c7a0aeafc27638f8f31b7fb6"
+                "reference": "d1978a7f20cdbd05c5c462ffa6728f279f03e0c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/0922533c9db11292c7a0aeafc27638f8f31b7fb6",
-                "reference": "0922533c9db11292c7a0aeafc27638f8f31b7fb6",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/d1978a7f20cdbd05c5c462ffa6728f279f03e0c9",
+                "reference": "d1978a7f20cdbd05c5c462ffa6728f279f03e0c9",
                 "shasum": ""
             },
             "require": {
@@ -251,7 +251,7 @@
                 "payment processing",
                 "stripe"
             ],
-            "time": "2017-10-31T18:52:25+00:00"
+            "time": "2018-01-17T20:53:33+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

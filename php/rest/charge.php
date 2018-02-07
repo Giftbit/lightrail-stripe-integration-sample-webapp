@@ -1,12 +1,12 @@
 <?php
 require_once __DIR__ . "/../include/common.php";
 
-$orderTotal = $staticParams["orderTotal"];
+$amount = $staticParams["amount"];
 $orderCurrency = $staticParams["currency"];
 $orderId = uniqid();
 $shopperId = $staticParams["shopperId"];
 $token = $_POST['source'];
-$lightrailShare = intval($_POST['lightrail-amount']);
+$lightrailShare = intval($_POST['lightrailAmount']);
 
 if (!isset($token)) {
     echo '<html>
@@ -16,7 +16,7 @@ if (!isset($token)) {
 }
 
 $param = array(
-    'amount' => $orderTotal,
+    'amount' => $amount,
     'currency' => $orderCurrency,
     'source' => $token,
     'shopperId' => $shopperId,

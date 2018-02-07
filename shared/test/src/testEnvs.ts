@@ -17,6 +17,11 @@ export interface TestEnv {
 
 export const testEnvs: TestEnv[] = [
     {
+        name: "dotnet",
+        cmd: "dotnet run",
+        initRegex: /Now listening on: http:\/\/(127\.0\.0\.1|localhost):3000/
+    },
+    {
         name: "node",
         cmd: "npm start",
         initRegex: /Lightrail demo running on http:\/\/localhost:3000/

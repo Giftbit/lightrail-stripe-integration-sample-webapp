@@ -1,7 +1,7 @@
 # Lightrail Stripe Sample Web App
 This project demonstrates how to use Lightrail's Drop-in Gift Card components. See our Drop-in Gift Card [documentation](https://github.com/Giftbit/Lightrail-API-Docs/blob/master/docs/quickstart/drop-in-gift-cards.md#drop-in-gift-cards) for a quick overview.  
 
-This demo is implemented in 3 environments: NodeJS, Ruby and PHP. (Java is coming soon.) Each environment uses language-specific libraries for Lightrail and Lightrail-Stripe that we strongly recommend. Common display code is rendered using Mustache templates, but any similar technology will do.
+This demo is implemented in 4 environments: .NET, NodeJS, Ruby and PHP. (Java is coming soon.) Each environment uses language-specific libraries for Lightrail and Lightrail-Stripe that we strongly recommend. Common display code is rendered using Mustache templates, but any similar technology will do.
 
 ## Configuring
 This demo needs details about your Stripe and Lightrail accounts to run.
@@ -14,6 +14,7 @@ Be sure to use test credentials from both your Lightrail and Stripe accounts.
 - `STRIPE_API_KEY` and `STRIPE_PUBLISHABLE_KEY`: Stripe API Key and Publishable Key; you can find this information in your Stripe account. 
 
 #### Optional Fields
+The default values in `.env.example` are fine but you can change these.
 - `TITLE`: The title of the store.
 - `SHOPPER_ID`: The shopper that will be interacting with the checkout page as well as the default shopper used for account management.
 - `ORDER_TOTAL`: The total amount the shopper will be charged at checkout.
