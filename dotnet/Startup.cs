@@ -24,13 +24,11 @@ namespace dotnet
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -42,7 +40,7 @@ namespace dotnet
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            // Similar to app.UseStaticFiles() and app.UseDefaultFiles()
+            // Route static files.
             app.UseFileServer(new FileServerOptions()
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "..", "shared", "static")),
@@ -51,17 +49,22 @@ namespace dotnet
 
             app.UseMvc(routes =>
             {
+                // Route Mustache views.
                 routes.MapGet("manageAccount", GenerateMustacheRequestDelegate("manageAccount"));
                 routes.MapGet("buyCards", GenerateMustacheRequestDelegate("buyCards"));
                 routes.MapGet("redeem", GenerateMustacheRequestDelegate("redeem"));
                 routes.MapGet("checkout", GenerateMustacheRequestDelegate("checkout"));
 
+                // Route controllers (ie: the REST API).
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
 
+        /// <summary>
+        /// Generate a RequestDelegate that renders a Mustache view.
+        /// </summary>
         private RequestDelegate GenerateMustacheRequestDelegate(string viewName) {
             var lightrail = new LightrailClient
             {

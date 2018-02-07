@@ -18,6 +18,7 @@ namespace dotnet
 
         public static void Main(string[] args)
         {
+            // Load env vars.
             // DotNetEnv 1.1.0 does not support quotes unescaping, but the next version should.
             DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), "..", "shared", ".env"));
             foreach (var requiredVar in RequiredEnvVars)
@@ -29,7 +30,8 @@ namespace dotnet
                 }
             }
             StripeConfiguration.SetApiKey(Environment.GetEnvironmentVariable("STRIPE_API_KEY"));
-
+            
+            // Start ASP.NET Core 2.0.
             BuildWebHost(args).Run();
         }
 

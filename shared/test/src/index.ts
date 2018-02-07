@@ -225,7 +225,7 @@ for (const testEnv of testEnvs) {
             this.timeout(30000);
             const cwd = path.join(__dirname, "..", "..", "..", testEnv.name);
             cp = childProcess.exec(`${testEnv.cmd}`, {cwd}, (error) => {
-                if (error && (error as any).signal !== 'SIGTERM' && (error as any).signal !== 'SIGKILL') {
+                if (error && !((error as any).signal === "SIGINT" || (error as any).signal === "SIGKILL" || ((error as any).signal === "SIGPIPE" && (error as any).killed))) {
                     console.log(error);
                 }
             });
@@ -253,9 +253,7 @@ for (const testEnv of testEnvs) {
 
         after(async function () {
             this.timeout(30000);
-            cp.kill("SIGTERM");
-            cp.stdout.destroy();
-            cp.stderr.destroy();
+            cp.kill("SIGINT");
 
             await Promise.race([cpExit, new Promise(resolve => setTimeout(resolve, 10000))]);
 
@@ -265,6 +263,8 @@ for (const testEnv of testEnvs) {
                 await cpExit;
             }
 
+            cp.stdout.destroy();
+            cp.stderr.destroy();
             cp = null;
             cpExit = null;
         });
