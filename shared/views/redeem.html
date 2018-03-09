@@ -7,6 +7,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>{{title}} Redeem Gift Cards</title>
+        <script type="text/javascript"
+                src="https://embed.lightrail.com/dropin/v1/lightrail-ui.js">
+        </script>
 
         <link rel="stylesheet" href="/css/app.css">
     </head>
@@ -20,11 +23,13 @@
 
                 <div class="two-column">
                     <article>
-                        <script
-                            src="https://embed.lightrail.com/dropin/codeRedemption.js"
-                            data-shoppertoken="{{shopperToken}}"
-                            data-fullcode="{{code}}"
-                        ></script>
+                        <div id="redemption-widget"></div>
+                        <script>
+                            var lightrailUI = new LightrailUI("{{shopperToken}}");
+
+                            var redemptionWidget = lightrailUI.components.codeRedemption({fullcode:"{{giftcode}}"});
+                            redemptionWidget.mount("#redemption-widget");
+                        </script>
                     </article>
                     <article>
                         <h3 class="subheadline">Note</h3>
