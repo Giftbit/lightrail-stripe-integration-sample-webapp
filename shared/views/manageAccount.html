@@ -15,6 +15,9 @@
             integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
             crossorigin="anonymous">
         </script>
+        <script type="text/javascript"
+                src="https://embed.lightrail.com/dropin/v1/lightrail-ui.js">
+        </script>
     </head>
     <body>
         {{> headerNav}}
@@ -27,13 +30,11 @@
                 <div class="two-column">
                     <article>
                         <h3>
-                            Account Balance:
-                            <span>
-                                <script
-                                        src="https://embed.lightrail.com/dropin/accountBalance.js"
-                                        data-shoppertoken="{{shopperToken}}">
-                                </script>
-                            </span>
+                            Your Balance: <span id="account-balance"></span>
+                            <script>
+                                var lightrailUI = new LightrailUI("{{shopperToken}}");
+                                lightrailUI.displayAccountBalance("#account-balance");
+                            </script>
                         </h3>
                     </article>
                     <article>

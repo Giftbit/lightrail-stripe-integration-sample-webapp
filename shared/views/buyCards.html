@@ -7,6 +7,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>Buy {{title}} Gift Cards</title>
+        <script type="text/javascript"
+                src="https://embed.lightrail.com/dropin/v1/lightrail-ui.js">
+        </script>
 
         <link rel="stylesheet" href="/css/app.css">
 
@@ -41,14 +44,20 @@
                     <article>
                         <div class="outlined">
                             <p>Buy a digital gift card and send it to someone to claim in our checkout.</p>
-                            <div class="button full-width dark">
-                                <script
-                                    src="https://embed.lightrail.com/dropin/cardPurchase.js"
-                                    data-shoppertoken="{{shopperToken}}"
-                                    data-buttonlabel="Buy A Rocketship Gift Card Today!"
-                                >
-                                </script>
-                            </div>
+                            <div id="launch-button-container" ></div>
+                            <script>
+                                var lightrailUI = new LightrailUI("{{shopperToken}}");
+
+                                var cardPurchaseDialog = lightrailUI.components.cardPurchaseDialog({
+                                    launch_btn_container: "#launch-button-container",
+                                    launch_btn_label: "Buy Gift Card",
+                                    launch_btn_classname: "ltrl_button"
+
+                                });
+                                cardPurchaseDialog.mount();
+
+                                document.getElementById("launch-button-container").addEventListener("click", function (ev) { cardPurchaseDialog.open(); });
+                            </script>
                         </div>
                     </article>
                     <article>
