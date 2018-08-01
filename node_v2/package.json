@@ -1,0 +1,31 @@
+{
+  "name": "stripe-integration-sample-node-webapp",
+  "version": "1.0.0",
+  "description": "Sample Node.JS webapp project for Lightrail-Stripe checkout.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Giftbit/stripe-integration-sample-node-webapp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Giftbit/stripe-integration-sample-node-webapp/issues"
+  },
+  "homepage": "https://github.com/Giftbit/stripe-integration-sample-node-webapp#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "lightrail-client": "^2.0.8",
+    "mustache": "^2.3.0",
+    "mustache-express": "^1.2.5",
+    "stripe": "^5.3.0",
+    "uuid": "^3.1.0"
+  }
+}
